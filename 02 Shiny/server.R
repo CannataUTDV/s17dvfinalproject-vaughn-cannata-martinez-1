@@ -6,6 +6,8 @@ require(shinydashboard)
 require(data.world)
 require(readr)
 require(DT)
+require(plotly)
+
 
 # Below is a data.world token to reduce connectivity issues.
 connection <- data.world(token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9kLXVzZXItY2xpZW50Omt2YXVnaG4iLCJpc3MiOiJhZ2VudDprdmF1Z2huOjo2ZGQ3N2FjZS1kYjFkLTQ2ZTktODZmZi04MzIzYzQ2MTYyN2UiLCJpYXQiOjE0ODQ2OTcyNzUsInJvbGUiOlsidXNlcl9hcGlfd3JpdGUiLCJ1c2VyX2FwaV9yZWFkIl0sImdlbmVyYWwtcHVycG9zZSI6dHJ1ZX0.FGeVf26qEOhxgRU9idrxcL75Jp84MOak_L0bGoZ33Yi1VFM9_McW7-vEtv3_AbkRH1NPfzWDy2Vn8LHSWGcAZg")
@@ -41,6 +43,9 @@ shinyServer(function(input, output) {
   
   # This widget is for the third Crosstabs tab.
   minPercent = reactive({input$Nonnative})
+  
+  # This widget is for the Boxplot tab.
+  minScore = reactive({input$ScoreCutoff})
   
 # Begin Crosstab Tab 1 ------------------------------------------------------------------
   df1 <- eventReactive(input$click1, {
@@ -301,4 +306,36 @@ shinyServer(function(input, output) {
       geom_text(aes( -1, win_avg, label = round(win_avg, 2), vjust = -.5, hjust = -.25), color="blue")
   })
   # End Barchart Tab 3 ___________________________________________________________
+  
+  # Begin Boxplot Tab ------------------------------------------------------------
+  df7 <- eventReactive(input$click7, {
+    print("Getting from data.world")
+    allscores = query(
+      connection,
+      #propsfile = "www/.data.world",
+      dataset="kvaughn/finalproject", type="sql",
+      query="select
+        `Restaurant Name` as name, `Zip Code` as zipcode, `Facility ID`as ID, Score
+        from `Restaurant_Inspection_Scores.csv/Restaurant_Inspection_Scores`
+        ORDER BY `Zip Code`, `Restaurant Name`"
+    ) 
+    
+    tdf = allscores %>% group_by(ID) %>% summarize(min_score = min(Score)) %>% filter(min_score < 70)
+    dplyr::right_join(allscores, tdf, by = "ID") 
+    
+  })
+  output$data7 <- renderDataTable({DT::datatable(df7(), rownames = FALSE,
+                                                 extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+  )
+  })
+  
+  output$plot7 <- renderPlot({ggplot(df7()) +
+      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
+      theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+      geom_boxplot(aes(x=name, y=Score)) +
+      facet_wrap(~zipcode, ncol = 1) + 
+      coord_flip()
+  })  
+  
+  # End Boxplot Tab ______________________________________________________________
 })

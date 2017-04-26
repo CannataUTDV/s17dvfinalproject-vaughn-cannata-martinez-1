@@ -16,7 +16,8 @@ dashboardPage(
         menuSubItem("Average Scores by Zip Code", tabName = "barchart1", icon = icon("check")),
         menuSubItem("Public Transit", tabName = "barchart2", icon = icon("check")),
         menuSubItem("Nonnative Residents", tabName = "barchart3", icon = icon("check"))
-      )
+      ),
+      menuItem("Boxplot example", tabName = "boxplot", icon = icon("archive"))
     )
   ),
   dashboardBody(    
@@ -94,20 +95,21 @@ dashboardPage(
               )
       ),
       # End Barchart2 tab content.
-      # Begin Barchart3 tab content.
-      tabItem("Nonnative residents and restaurant density", tabName = "barchart3",
+      # Begin Boxplot tab content.
+      tabItem("Restaurants with scores below cutoff value", tabName = "boxplot",
               tabsetPanel(
-                tabPanel("Data", "Percent nonnative population:",
-                         sliderInput("Nonnative", "Slider is preset on average percentage for region", 
-                                     min = 7, max = 36,  value = 17.4),
-                         actionButton(inputId = "click6", label = "Set minimum"),
+                tabPanel("Data", "Minimum score below:",
+                         sliderInput("ScoreCutoff", "Slider is preset on cutoff for reinspection", 
+                                     min = 36, max = 100,  value = 70),
+                         actionButton(inputId = "click7", label = "Set cutoff"),
                          hr(), # Add space after button.
-                         DT::dataTableOutput("data6")
+                         DT::dataTableOutput("data7")
                 ),
-                tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants in Region, and Blue = Average Number of Restaurants in Selected Zip Codes", plotOutput("plot6", height=1500))
+                tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants in Region, and Blue = Average Number of Restaurants in Selected Zip Codes", plotOutput("plot7", height=1500))
               )
       )
-      # End Barchart3 tab content.
+      # End Boxplot tab content.
+      
     )
   ), skin = "green"
 )
