@@ -2,6 +2,6 @@
 s17dvfinalproject-vaughn-cannata-martinez-1 created by GitHub Classroom
 
 CS 329E Data Visualization Final Project
-Marcus Martinez, Chris Cannata, and Kate Vaughn
-Find cleaned data here: https://data.world/kvaughn/s-17-dv-project-6
-Find Shinyapps site here: http://kvaughn.shinyapps.io/project_6
+Marcus Martinez, Chris Cannata, and Kate Vaughn  
+Find cleaned data here: https://data.world/kvaughn/s-17-dv-project-6  
+Find Shinyapps site here: http://kvaughn.shinyapps.io/project_6  
