@@ -16,12 +16,21 @@ connection <- data.world(token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9kLXVzZXItY
 regions = query(
   connection,
   #data.world(propsfile = "www/.data.world"),  
-  dataset="kvaughn/s-17-dv-project-6", type="sql",  
+  dataset="kvaughn/finalproject", type="sql",  
   query="select distinct `Zip Code` as D, `Zip Code` as R 
   from Restaurant_Inspection_Scores order by 1"
 ) # %>% View()
 region_list <- as.list(regions$D, regions$R)
 region_list <- append(list("All" = "All"), region_list)
+
+zipcodes = query(
+  connection,
+  #data.world(propsfile = "www/.data.world"),
+  dataset="kvaughn/finalproject", type="sql",
+  query="select distinct `Zip Code` as zipcode
+  from Restaurant_Inspection_Scores order by 1"
+)
+zip_list <- as.list(zipcodes$zipcode)
 
 shinyServer(function(input, output) { 
   # These widgets are for the first Crosstabs tab.
@@ -307,7 +316,7 @@ shinyServer(function(input, output) {
   })
   # End Barchart Tab 3 ___________________________________________________________
   
-  # Begin Boxplot Tab ------------------------------------------------------------
+  # Begin Map Tab ------------------------------------------------------------
   df7 <- eventReactive(input$click7, {
     print("Getting from data.world")
     allscores = query(
@@ -320,22 +329,20 @@ shinyServer(function(input, output) {
         ORDER BY `Zip Code`, `Restaurant Name`"
     ) 
     
-    tdf = allscores %>% group_by(ID) %>% summarize(min_score = min(Score)) %>% filter(min_score < 70)
-    dplyr::right_join(allscores, tdf, by = "ID") 
+    tdf = allscores %>% group_by(zipcode, ID) %>% summarize(min_score = min(Score)) %>% filter(min_score < 70)
+    tdf2 = tdf %>% group_by(zipcode) %>% count(zipcode)
+    dplyr::left_join(allscores, tdf2, by = "zipcode") 
     
   })
+  
   output$data7 <- renderDataTable({DT::datatable(df7(), rownames = FALSE,
-                                                 extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+                                  extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
   
   output$plot7 <- renderPlot({ggplot(df7()) +
-      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
-      theme(axis.text.y=element_text(size=14, hjust=0.5)) +
-      geom_boxplot(aes(x=name, y=Score)) +
-      facet_wrap(~zipcode, ncol = 1) + 
-      coord_flip()
+      map
   })  
   
-  # End Boxplot Tab ______________________________________________________________
+  # End Map Tab ______________________________________________________________
 })

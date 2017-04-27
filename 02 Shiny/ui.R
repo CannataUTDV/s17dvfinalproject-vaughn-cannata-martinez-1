@@ -17,7 +17,7 @@ dashboardPage(
         menuSubItem("Public Transit", tabName = "barchart2", icon = icon("check")),
         menuSubItem("Nonnative Residents", tabName = "barchart3", icon = icon("check"))
       ),
-      menuItem("Boxplot example", tabName = "boxplot", icon = icon("archive"))
+      menuItem("Map example", tabName = "map", icon = icon("archive"))
     )
   ),
   dashboardBody(    
@@ -95,8 +95,8 @@ dashboardPage(
               )
       ),
       # End Barchart2 tab content.
-      # Begin Boxplot tab content.
-      tabItem("Restaurants with scores below cutoff value", tabName = "boxplot",
+      # Begin Map tab content.
+      tabItem("Map of restaurants with scores below cutoff value", tabName = "map",
               tabsetPanel(
                 tabPanel("Data", "Minimum score below:",
                          sliderInput("ScoreCutoff", "Slider is preset on cutoff for reinspection", 
@@ -105,10 +105,10 @@ dashboardPage(
                          hr(), # Add space after button.
                          DT::dataTableOutput("data7")
                 ),
-                tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants in Region, and Blue = Average Number of Restaurants in Selected Zip Codes", plotOutput("plot7", height=1500))
+                tabPanel("Map", "Number of restaurants with scores below cutoff value", plotOutput("plot7", height=1500))
               )
       )
-      # End Boxplot tab content.
+      # End Map tab content.
       
     )
   ), skin = "green"
