@@ -53,8 +53,9 @@ shinyServer(function(input, output) {
   # This widget is for the third Crosstabs tab.
   minPercent = reactive({input$Nonnative})
   
-  # This widget is for the Boxplot tab.
-  minScore = reactive({input$ScoreCutoff})
+  # These widgets are for the Boxplot tab.
+  minScore = reactive({input$ScoreCutoff}) 
+
   
 # Begin Crosstab Tab 1 ------------------------------------------------------------------
   df1 <- eventReactive(input$click1, {
@@ -329,19 +330,35 @@ shinyServer(function(input, output) {
         ORDER BY `Zip Code`, `Restaurant Name`"
     ) 
     
-    tdf = allscores %>% group_by(zipcode, ID) %>% summarize(min_score = min(Score)) %>% filter(min_score < 70)
-    tdf2 = tdf %>% group_by(zipcode) %>% count(zipcode)
-    dplyr::left_join(allscores, tdf2, by = "zipcode") 
+    tdf = allscores %>% group_by(ID) %>% summarize(min_score = min(Score)) %>% filter(min_score < minScore())
+    dplyr::right_join(allscores, tdf, by = "ID") 
     
   })
   
   output$data7 <- renderDataTable({DT::datatable(df7(), rownames = FALSE,
-                                  extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+                                                 extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
   
-  output$plot7 <- renderPlot({ggplot(df7()) +
-      map
+  output$zip2 <- renderUI({
+    zip <- as.data.frame(df7()) %>% group_by(zipcode) %>% distinct() %>% arrange(zipcode)
+    selectInput("selectedZip", "Choose Zip Code:", zip, multiple = FALSE)
+    })
+  
+  erzip <- eventReactive(input$click8, {
+    print("We got this far")
+    print(input$selectedZip)
+    input$selectedZip
+
+  })
+  
+  output$plot7 <- renderPlot({
+    tplot <- as.data.frame(df7()) %>% filter(zipcode == erzip())
+    ggplot(tplot) +
+    theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
+    theme(axis.text.y=element_text(size=14, hjust=0.5)) +      
+    geom(aes(x=name, y=Score)) +
+    coord_flip()
   })  
   
   # End Map Tab ______________________________________________________________

@@ -17,7 +17,7 @@ dashboardPage(
         menuSubItem("Public Transit", tabName = "barchart2", icon = icon("check")),
         menuSubItem("Nonnative Residents", tabName = "barchart3", icon = icon("check"))
       ),
-      menuItem("Map example", tabName = "map", icon = icon("archive"))
+      menuItem("Boxplot example", tabName = "boxplot", icon = icon("archive"))
     )
   ),
   dashboardBody(    
@@ -95,8 +95,8 @@ dashboardPage(
               )
       ),
       # End Barchart2 tab content.
-      # Begin Map tab content.
-      tabItem("Map of restaurants with scores below cutoff value", tabName = "map",
+      # Begin Boxplot tab content.
+      tabItem("Restaurants with scores below cutoff value", tabName = "boxplot",
               tabsetPanel(
                 tabPanel("Data", "Minimum score below:",
                          sliderInput("ScoreCutoff", "Slider is preset on cutoff for reinspection", 
@@ -105,10 +105,15 @@ dashboardPage(
                          hr(), # Add space after button.
                          DT::dataTableOutput("data7")
                 ),
-                tabPanel("Map", "Number of restaurants with scores below cutoff value", plotOutput("plot7", height=1500))
+                tabPanel("Boxplot", "Select zip code to view:", 
+                         uiOutput("zip2"), # See http://shiny.rstudio.com/gallery/dynamic-ui.html
+                         actionButton(inputId = "click8",  label = "Show data"),
+                         hr(), # Add space after button.
+                         
+                         plotOutput("plot8", height=1500))
               )
       )
-      # End Map tab content.
+      # End Boxplot tab content.
       
     )
   ), skin = "green"
