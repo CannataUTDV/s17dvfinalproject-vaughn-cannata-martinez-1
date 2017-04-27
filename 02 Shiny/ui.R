@@ -107,10 +107,9 @@ dashboardPage(
                 ),
                 tabPanel("Boxplot", "Select zip code to view:", 
                          uiOutput("zip2"), # See http://shiny.rstudio.com/gallery/dynamic-ui.html
-                         actionButton(inputId = "click8",  label = "Show data"),
                          hr(), # Add space after button.
                          
-                         plotOutput("plot8", height=1500))
+                         plotOutput("plot7", height=1000))
               )
       )
       # End Boxplot tab content.

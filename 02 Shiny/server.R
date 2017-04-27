@@ -345,19 +345,14 @@ shinyServer(function(input, output) {
     selectInput("selectedZip", "Choose Zip Code:", zip, multiple = FALSE)
     })
   
-  erzip <- eventReactive(input$click8, {
-    print("We got this far")
-    print(input$selectedZip)
-    input$selectedZip
-
-  })
   
   output$plot7 <- renderPlot({
-    tplot <- as.data.frame(df7()) %>% filter(zipcode == erzip())
+    tplot <- as.data.frame(df7()) %>% filter(zipcode == input$selectedZip)
     ggplot(tplot) +
+    labs(title = "Restaurants with failing scores in selected zip code:") +
     theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
     theme(axis.text.y=element_text(size=14, hjust=0.5)) +      
-    geom(aes(x=name, y=Score)) +
+    geom_boxplot(aes(x=name, y=Score)) +
     coord_flip()
   })  
   
