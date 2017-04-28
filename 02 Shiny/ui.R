@@ -7,6 +7,8 @@ dashboardPage(
   ),
   dashboardSidebar(
     sidebarMenu(
+      menuItem("Boxplot example", tabName = "boxplot", icon = icon("archive")),
+      menuItem("Histogram example", tabName = "hist", icon = icon("signal")),
       menuItem("Crosstab examples", tabName = "menu1", icon = icon("th"),
         menuSubItem("Safety Index", tabName = "crosstab1", icon = icon("check")),
         menuSubItem("Lowest Inspection Scores", tabName = "crosstab2", icon = icon("check")),
@@ -16,12 +18,30 @@ dashboardPage(
         menuSubItem("Average Scores by Zip Code", tabName = "barchart1", icon = icon("check")),
         menuSubItem("Public Transit", tabName = "barchart2", icon = icon("check")),
         menuSubItem("Nonnative Residents", tabName = "barchart3", icon = icon("check"))
-      ),
-      menuItem("Boxplot example", tabName = "boxplot", icon = icon("archive"))
+      )
+      
     )
   ),
   dashboardBody(    
     tabItems(
+      # Begin Boxplot tab content.
+      tabItem("Austin-area restaurants with scores below cutoff value, 2014-2017", tabName = "boxplot",
+              tabsetPanel(
+                tabPanel("Data", "Minimum score below:",
+                         sliderInput("ScoreCutoff", "Slider is preset on cutoff for reinspection", 
+                                     min = 36, max = 100,  value = 70),
+                         actionButton(inputId = "click7", label = "Set cutoff"),
+                         hr(), # Add space after button.
+                         DT::dataTableOutput("data7")
+                ),
+                tabPanel("Boxplot", "Select zip code to view:", 
+                         uiOutput("zip2"), # See http://shiny.rstudio.com/gallery/dynamic-ui.html
+                         hr(), # Add space after button.
+                         
+                         plotOutput("plot7", height=1000))
+              )
+      ),
+      # End Boxplot tab content.
       # Begin Crosstab1 tab content.
       tabItem("Safety Index, scores by year: A low Safety Index indicates a relatively high number of low inspection scores per period", tabName = "crosstab1",
         tabsetPanel(
@@ -95,24 +115,21 @@ dashboardPage(
               )
       ),
       # End Barchart2 tab content.
-      # Begin Boxplot tab content.
-      tabItem("Restaurants with scores below cutoff value", tabName = "boxplot",
+      # Begin Barchart3 tab content.
+      tabItem("Nonnative residents and restaurant density", tabName = "barchart3",
               tabsetPanel(
-                tabPanel("Data", "Minimum score below:",
-                         sliderInput("ScoreCutoff", "Slider is preset on cutoff for reinspection", 
-                                     min = 36, max = 100,  value = 70),
-                         actionButton(inputId = "click7", label = "Set cutoff"),
+                tabPanel("Data", "Percent nonnative population:",
+                         sliderInput("Nonnative", "Slider is preset on average percentage for region", 
+                                     min = 7, max = 36,  value = 17.4),
+                         actionButton(inputId = "click6", label = "Set minimum"),
                          hr(), # Add space after button.
-                         DT::dataTableOutput("data7")
+                         DT::dataTableOutput("data6")
                 ),
-                tabPanel("Boxplot", "Select zip code to view:", 
-                         uiOutput("zip2"), # See http://shiny.rstudio.com/gallery/dynamic-ui.html
-                         hr(), # Add space after button.
-                         
-                         plotOutput("plot7", height=1000))
+                tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants in Region, and Blue = Average Number of Restaurants in Selected Zip Codes", plotOutput("plot6", height=1500))
               )
       )
-      # End Boxplot tab content.
+      # End Barchart3 tab content.
+      
       
     )
   ), skin = "green"
