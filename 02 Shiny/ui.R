@@ -7,6 +7,7 @@ dashboardPage(
   ),
   dashboardSidebar(
     sidebarMenu(
+      menuItem("Home", tabName = "home", icon = icon("home")),
       menuItem("Boxplot example", tabName = "boxplot", icon = icon("archive")),
       menuItem("Histogram example", tabName = "hist", icon = icon("signal")),
       menuItem("Scatterplot examples", tabName = "menu3", icon = icon("line-chart"),
@@ -27,7 +28,7 @@ dashboardPage(
       
     )
   ),
-  dashboardBody(    
+  dashboardBody(
     tabItems(
       # Begin Boxplot tab content. ----------------------------------------------------------
       tabItem("Austin-area restaurants with scores below cutoff value, 2014-2017", tabName = "boxplot",
