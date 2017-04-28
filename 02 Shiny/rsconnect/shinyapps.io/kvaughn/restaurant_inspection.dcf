@@ -3,8 +3,8 @@ title: Restaurant Inspection
 account: kvaughn
 server: shinyapps.io
 appId: 172159
-bundleId: 807052
+bundleId: 807260
 url: https://kvaughn.shinyapps.io/restaurant_inspection/
-when: 1493333069.93728
+when: 1493348417.30015
 asMultiple: FALSE
 asStatic: FALSE

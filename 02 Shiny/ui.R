@@ -3,7 +3,7 @@ require(shiny)
 require(shinydashboard)
 
 dashboardPage(
-  dashboardHeader(title = "DV Project 6"
+  dashboardHeader(title = "Austin Restaurants"
   ),
   dashboardSidebar(
     sidebarMenu(
