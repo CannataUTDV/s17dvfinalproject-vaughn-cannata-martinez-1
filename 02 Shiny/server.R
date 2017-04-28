@@ -32,7 +32,16 @@ zipcodes = query(
 )
 zip_list <- as.list(zipcodes$zipcode)
 
+
+# Begin shinyServer section ------------------------------------------------------------
 shinyServer(function(input, output) { 
+  
+  # This widget is for the Boxplot tab.
+  minScore = reactive({input$ScoreCutoff}) 
+  
+  # This widget is for the Histogram tab.
+  years_selected = reactive({input$selectedYears})
+  
   # These widgets are for the first Crosstabs tab.
   KPI_Low = reactive({input$KPI1})     
   KPI_Medium = reactive({input$KPI2})
@@ -52,10 +61,40 @@ shinyServer(function(input, output) {
   
   # This widget is for the third Crosstabs tab.
   minPercent = reactive({input$Nonnative})
-  
-  # These widgets are for the Boxplot tab.
-  minScore = reactive({input$ScoreCutoff}) 
 
+# Begin Histogram Tab -------------------------------------------------------
+  
+  df8 <- eventReactive(input$click8, {
+    print("Getting from data.world")
+    print(years_selected())
+    tdf = query(
+      connection,
+      #propsfile = "www/.data.world",
+      dataset="kvaughn/finalproject", type="sql",
+      query="select year(`Inspection Date`) as `Inspection Year`,  
+      `Zip Code`, Score
+      from Restaurant_Inspection_Scores
+      where cast(year(`Inspection Date`) as string) in (?, ?, ?, ?)",
+      queryParameters = years_selected()
+    )
+    
+  #   tdf2 = tdf %>% group_by(`Zip Code`) %>% 
+  #     summarize(window_avg_score = mean(average_score))
+  #   print(tdf2)
+  #   dplyr::inner_join(tdf, tdf2, by = "Zip Code")
+  })
+   output$data8 <- renderDataTable({DT::datatable(df8(), rownames = FALSE,
+                                                  extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+   )
+   })
+  output$plot8 <- renderPlot({ggplot(df8(), aes(Score)) +
+      scale_y_continuous(labels = scales::comma) + # no scientific notation
+      theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) +
+      theme(axis.text.y=element_text(size=12, hjust=0.5)) +
+      geom_histogram(binwidth = 5, center = 2.5)
+  })
+  
+# End Histogram Tab ____________________________________________________________
   
 # Begin Crosstab Tab 1 ------------------------------------------------------------------
   df1 <- eventReactive(input$click1, {
@@ -317,7 +356,7 @@ shinyServer(function(input, output) {
   })
   # End Barchart Tab 3 ___________________________________________________________
   
-  # Begin Map Tab ------------------------------------------------------------
+  # Begin Boxplot Tab ------------------------------------------------------------
   df7 <- eventReactive(input$click7, {
     print("Getting from data.world")
     allscores = query(
@@ -356,5 +395,7 @@ shinyServer(function(input, output) {
     coord_flip()
   })  
   
-  # End Map Tab ______________________________________________________________
+  # End Boxplot Tab ______________________________________________________________
 })
+
+# End shinyServer section _______________________________________________________________

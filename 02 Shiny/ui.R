@@ -24,7 +24,7 @@ dashboardPage(
   ),
   dashboardBody(    
     tabItems(
-      # Begin Boxplot tab content.
+      # Begin Boxplot tab content. ----------------------------------------------------------
       tabItem("Austin-area restaurants with scores below cutoff value, 2014-2017", tabName = "boxplot",
               tabsetPanel(
                 tabPanel("Data", "Minimum score below:",
@@ -41,8 +41,23 @@ dashboardPage(
                          plotOutput("plot7", height=1000))
               )
       ),
-      # End Boxplot tab content.
-      # Begin Crosstab1 tab content.
+      # End Boxplot tab content. ____________________________________________________________
+      # Begin Histogram tab content. ---------------------------------------------------------- 
+      tabItem("Histogram of scores in selected year(s)", tabName = "hist",
+              tabsetPanel(
+                tabPanel("Data", "Choose Year(s) to Display:",
+                         checkboxGroupInput("selectedYears", label = "Years", 
+                                            choices = list(2014, 2015, 2016, 2017)),
+                         # See http://shiny.rstudio.com/gallery/widget-gallery.html
+                         actionButton(inputId = "click8",  label = "To get data, click here"),
+                         hr(), # Add space after button.
+                         DT::dataTableOutput("data8")
+                ),
+                tabPanel("Histogram", plotOutput("plot8", height=1000))
+              )
+      ),
+      # End Histogram tab content. ____________________________________________________________
+      # Begin Crosstab1 tab content. ----------------------------------------------------------
       tabItem("Safety Index, scores by year: A low Safety Index indicates a relatively high number of low inspection scores per period", tabName = "crosstab1",
         tabsetPanel(
             tabPanel("Data", "Set Safety Index Levels:",
@@ -57,8 +72,8 @@ dashboardPage(
             tabPanel("Crosstab", plotOutput("plot1", height=1500))
           )
         ),
-      # End Crosstab1 tab content.
-      # Begin Crosstab2 content.
+      # End Crosstab1 tab content. ____________________________________________________________
+      # Begin Crosstab2 tab content. ----------------------------------------------------------
       tabItem("Lowest inspection scores by year and zip code", tabName = "crosstab2",
               tabsetPanel(
                 tabPanel("Data", "Set Cutoff Score:",
@@ -71,8 +86,8 @@ dashboardPage(
                 tabPanel("Crosstab", plotOutput("plot3", height=1500))
               )
       ),
-      # End Crosstab2 content.
-      # Begin Crosstab3 tab content.
+      # End Crosstab2 tab content. ____________________________________________________________
+      # Begin Crosstab3 tab content. ----------------------------------------------------------
       tabItem("Number of people per restaurant in a given year", tabName = "crosstab3",
               tabsetPanel(
                 tabPanel("Data", "Number of People per Resturant:",
@@ -87,8 +102,9 @@ dashboardPage(
                 tabPanel("Crosstab", plotOutput("plot4", height=1500))
               )
       ),
-      # End Crosstab3 tab content.
-      # Begin Barchart1 tab content.
+      # End Crosstab3 tab content. ____________________________________________________________
+      
+      # Begin Barchart1 tab content. ----------------------------------------------------------
       tabItem("Average inspection score per zip code in a given year", tabName = "barchart1",
         tabsetPanel(
           tabPanel("Data",  
@@ -100,8 +116,8 @@ dashboardPage(
           tabPanel("Barchart", "Black = Average Score per Year, Red = Grand Average Score, and  Blue = (Grand Average Score - Average Score per Year)", plotOutput("plot2", height=1500))
         )
       ),
-      # End Barchart1 tab content.
-      # Begin Barchart2 tab content.
+      # End Barchart1 tab content. ____________________________________________________________
+      # Begin Barchart2 tab content. ----------------------------------------------------------
       tabItem("Transit stops and restaurant density", tabName = "barchart2",
               tabsetPanel(
                 tabPanel("Data", "Minimum Stops per Zip Code:",
@@ -114,8 +130,8 @@ dashboardPage(
                 tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants in Region, and Blue = Average Number of Restaurants in Selected Zip Codes", plotOutput("plot5", height=1500))
               )
       ),
-      # End Barchart2 tab content.
-      # Begin Barchart3 tab content.
+      # End Barchart2 tab content. ____________________________________________________________
+      # Begin Barchart3 tab content. ----------------------------------------------------------
       tabItem("Nonnative residents and restaurant density", tabName = "barchart3",
               tabsetPanel(
                 tabPanel("Data", "Percent nonnative population:",
@@ -128,7 +144,7 @@ dashboardPage(
                 tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants in Region, and Blue = Average Number of Restaurants in Selected Zip Codes", plotOutput("plot6", height=1500))
               )
       )
-      # End Barchart3 tab content.
+      # End Barchart3 tab content. ____________________________________________________________
       
       
     )
