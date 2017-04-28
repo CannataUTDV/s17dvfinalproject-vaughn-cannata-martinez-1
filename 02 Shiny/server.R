@@ -62,6 +62,47 @@ shinyServer(function(input, output) {
   # This widget is for the third Crosstabs tab.
   minPercent = reactive({input$Nonnative})
 
+# Begin Boxplot Tab ------------------------------------------------------------
+  df7 <- eventReactive(input$click7, {
+    print("Getting from data.world")
+    allscores = query(
+      connection,
+      #propsfile = "www/.data.world",
+      dataset="kvaughn/finalproject", type="sql",
+      query="select
+      `Restaurant Name` as name, `Zip Code` as zipcode, `Facility ID`as ID, Score
+      from `Restaurant_Inspection_Scores.csv/Restaurant_Inspection_Scores`
+      ORDER BY `Zip Code`, `Restaurant Name`"
+    ) 
+    
+    tdf = allscores %>% group_by(ID) %>% summarize(min_score = min(Score)) %>% filter(min_score < minScore())
+    dplyr::right_join(allscores, tdf, by = "ID") 
+    
+  })
+  
+  output$data7 <- renderDataTable({DT::datatable(df7(), rownames = FALSE,
+                                                 extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+  )
+  })
+  
+  output$zip2 <- renderUI({
+    zip <- as.data.frame(df7()) %>% group_by(zipcode) %>% distinct() %>% arrange(zipcode)
+    selectInput("selectedZip", "Choose Zip Code:", zip, multiple = FALSE)
+  })
+  
+  
+  output$plot7 <- renderPlot({
+    tplot <- as.data.frame(df7()) %>% filter(zipcode == input$selectedZip)
+    ggplot(tplot) +
+      labs(title = "Restaurants with failing scores in selected zip code:") +
+      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
+      theme(axis.text.y=element_text(size=14, hjust=0.5)) +      
+      geom_boxplot(aes(x=name, y=Score)) +
+      coord_flip()
+  })  
+  
+# End Boxplot Tab ______________________________________________________________
+  
 # Begin Histogram Tab -------------------------------------------------------
   
   df8 <- eventReactive(input$click8, {
@@ -93,8 +134,13 @@ shinyServer(function(input, output) {
       theme(axis.text.y=element_text(size=12, hjust=0.5)) +
       geom_histogram(binwidth = 5, center = 2.5)
   })
-  
 # End Histogram Tab ____________________________________________________________
+  
+# Begin Scatterplot Tab 1 ------------------------------------------------------------------
+  
+  
+  
+# End Scatterplot Tab 1 ____________________________________________________________  
   
 # Begin Crosstab Tab 1 ------------------------------------------------------------------
   df1 <- eventReactive(input$click1, {
@@ -207,9 +253,9 @@ shinyServer(function(input, output) {
       geom_text(aes(x=`Inspection Year`, y=as.character(`zipcode`), label=round(density_display, 2)), size=4) +
       geom_tile(aes(x=`Inspection Year`, y=as.character(`zipcode`), fill=density), alpha=0.50)
   })
-  # End Crosstab Tab 3 ___________________________________________________________
+# End Crosstab Tab 3 ___________________________________________________________
   
-  # Begin Barchart Tab 1 ------------------------------------------------------------------
+# Begin Barchart Tab 1 ------------------------------------------------------------------
   df2 <- eventReactive(input$click2, {
     if(input$selectedRegions == 'All') region_list <- input$selectedRegions
     else region_list <- append(list("Skip" = "Skip"), input$selectedRegions)
@@ -255,9 +301,9 @@ shinyServer(function(input, output) {
       geom_hline(aes(yintercept = window_avg_score), color="red") +
       geom_text(aes( -1, window_avg_score, label = round(window_avg_score, 2), vjust = -.5, hjust = -.25), color="red")
   })
-  # End Barchart Tab 1 ___________________________________________________________
+# End Barchart Tab 1 ___________________________________________________________
   
-  # Begin Barchart Tab 2 ------------------------------------------------------------------
+# Begin Barchart Tab 2 ------------------------------------------------------------------
   df5 <- eventReactive(input$click5, {
     
     print("Getting from data.world")
@@ -306,8 +352,9 @@ shinyServer(function(input, output) {
       geom_hline(aes(yintercept = win_avg), color="blue") +
       geom_text(aes( -1, win_avg, label = round(win_avg, 2), vjust = -.5, hjust = -.25), color="blue")
   })
-  # End Barchart Tab 2 ___________________________________________________________  
-  # Begin Barchart Tab 3 ------------------------------------------------------------------
+# End Barchart Tab 2 ___________________________________________________________  
+  
+# Begin Barchart Tab 3 ------------------------------------------------------------------
   df6 <- eventReactive(input$click6, {
     print("Getting from data.world")
     tempdf = query(
@@ -354,48 +401,8 @@ shinyServer(function(input, output) {
       geom_hline(aes(yintercept = win_avg), color="blue") +
       geom_text(aes( -1, win_avg, label = round(win_avg, 2), vjust = -.5, hjust = -.25), color="blue")
   })
-  # End Barchart Tab 3 ___________________________________________________________
+# End Barchart Tab 3 ___________________________________________________________
   
-  # Begin Boxplot Tab ------------------------------------------------------------
-  df7 <- eventReactive(input$click7, {
-    print("Getting from data.world")
-    allscores = query(
-      connection,
-      #propsfile = "www/.data.world",
-      dataset="kvaughn/finalproject", type="sql",
-      query="select
-        `Restaurant Name` as name, `Zip Code` as zipcode, `Facility ID`as ID, Score
-        from `Restaurant_Inspection_Scores.csv/Restaurant_Inspection_Scores`
-        ORDER BY `Zip Code`, `Restaurant Name`"
-    ) 
-    
-    tdf = allscores %>% group_by(ID) %>% summarize(min_score = min(Score)) %>% filter(min_score < minScore())
-    dplyr::right_join(allscores, tdf, by = "ID") 
-    
-  })
-  
-  output$data7 <- renderDataTable({DT::datatable(df7(), rownames = FALSE,
-                                                 extensions = list(Responsive = TRUE, FixedHeader = TRUE)
-  )
-  })
-  
-  output$zip2 <- renderUI({
-    zip <- as.data.frame(df7()) %>% group_by(zipcode) %>% distinct() %>% arrange(zipcode)
-    selectInput("selectedZip", "Choose Zip Code:", zip, multiple = FALSE)
-    })
-  
-  
-  output$plot7 <- renderPlot({
-    tplot <- as.data.frame(df7()) %>% filter(zipcode == input$selectedZip)
-    ggplot(tplot) +
-    labs(title = "Restaurants with failing scores in selected zip code:") +
-    theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
-    theme(axis.text.y=element_text(size=14, hjust=0.5)) +      
-    geom_boxplot(aes(x=name, y=Score)) +
-    coord_flip()
-  })  
-  
-  # End Boxplot Tab ______________________________________________________________
-})
+ })
 
 # End shinyServer section _______________________________________________________________
