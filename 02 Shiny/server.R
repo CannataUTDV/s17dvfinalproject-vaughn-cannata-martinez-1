@@ -1,5 +1,6 @@
 # server.R
 require(ggplot2)
+require(quantreg)
 require(dplyr)
 require(shiny)
 require(shinydashboard)
@@ -137,8 +138,44 @@ shinyServer(function(input, output) {
 # End Histogram Tab ____________________________________________________________
   
 # Begin Scatterplot Tab 1 ------------------------------------------------------------------
+  df9 <- eventReactive(input$click9, {
+    print("Getting from data.world")
+    query(
+      connection,
+      # propsfile = "www/.data.world",
+      dataset = "kvaughn/finalproject", type = "sql", 
+      query = "select srp.`Zip Code` as zipcode, srp.stops, srp.restaurants, 
+        srp.ZPOP as population, 100 * (fb.Noncitizens + fb.Naturalized) / fb.Native as percent_nonnative
+        FROM `stops-restaurants-pop.csv/stops-restaurants-pop` srp
+        JOIN `foreignbirth.csv/foreignbirth` fb ON srp.`Zip Code` = fb.`Zip Code`
+        ORDER BY srp.`Zip Code`"
+    )
+  })
   
+  output$data9 <- renderDataTable({DT::datatable(df9(), rownames = FALSE,
+                            extensions = list(Responsive = TRUE, FixedHeader = TRUE)
+  )
+  })
   
+    output$plot9 <- renderPlot({ggplot(df9(), aes(x=population, y=restaurants)) +
+      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
+      theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+      labs(x = "Population", y = "Number of Restaurants", 
+           title = "Zip code population by number of restaurants") +
+      geom_point(shape = 21, fill = "red") +
+      geom_quantile(quantiles = 0.5, size = 2, color = "red", alpha = 0.5)
+    })
+  
+    # output$plot10 <- renderPlot({ggplot(df9(), aes(x=population, y=stops)) +
+    #   theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
+    #   theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+    #   labs(x = "Population", y = "Number of Transit Stops", 
+    #        title = "Zip code population by number of transit stops") +
+    #   geom_point(shape = 21, fill = "red") +
+    #   geom_quantile(quantiles = 0.5, size = 2, color = "red", alpha = 0.5)
+    # })
+  
+
   
 # End Scatterplot Tab 1 ____________________________________________________________  
   

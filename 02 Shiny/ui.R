@@ -67,12 +67,14 @@ dashboardPage(
       tabItem("Scatterplot 1", tabName = "scatter1",
               tabsetPanel(
                 tabPanel("Data",  
-                         
+                         "Collect data for scatterplots by clicking button.",
+                         hr(),
                          actionButton(inputId = "click9",  label = "To get data, click here"),
                          hr(), # Add space after button.
                          DT::dataTableOutput("data9")
                 ),
-                tabPanel("Plot", plotOutput("plot9", height=1000))
+                tabPanel("Plot1",  
+                         plotOutput("plot9", height=400))
               )
       ),
       # End Scatter1 tab content. ____________________________________________________________
