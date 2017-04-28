@@ -67,7 +67,7 @@ dashboardPage(
       tabItem("Scatterplot 1", tabName = "scatter1",
               tabsetPanel(
                 tabPanel("Data",  
-                         uiOutput("regions2"), # See http://shiny.rstudio.com/gallery/dynamic-ui.html
+                         
                          actionButton(inputId = "click9",  label = "To get data, click here"),
                          hr(), # Add space after button.
                          DT::dataTableOutput("data9")
@@ -80,7 +80,7 @@ dashboardPage(
       tabItem("Scatterplot 2", tabName = "scatter2",
               tabsetPanel(
                 tabPanel("Data",  
-                         uiOutput("regions2"), # See http://shiny.rstudio.com/gallery/dynamic-ui.html
+                         
                          actionButton(inputId = "click10",  label = "To get data, click here"),
                          hr(), # Add space after button.
                          DT::dataTableOutput("data10")
@@ -93,7 +93,7 @@ dashboardPage(
       tabItem("Scatterplot 3", tabName = "scatter3",
               tabsetPanel(
                 tabPanel("Data",  
-                         uiOutput("regions2"), # See http://shiny.rstudio.com/gallery/dynamic-ui.html
+                         
                          actionButton(inputId = "click11",  label = "To get data, click here"),
                          hr(), # Add space after button.
                          DT::dataTableOutput("data11")

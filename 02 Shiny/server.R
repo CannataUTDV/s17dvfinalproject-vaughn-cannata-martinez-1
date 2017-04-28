@@ -102,7 +102,7 @@ shinyServer(function(input, output) {
         query(
             connection,
             #propsfile = "www/.data.world",
-            dataset="kvaughn/s-17-dv-project-6", type="sql",
+            dataset="kvaughn/finalproject", type="sql",
             query="select
             cast(year(`Inspection Date`) as string) as `Inspection Year`,
             count(DISTINCT `Facility ID`), `Zip Code`, 
@@ -141,7 +141,7 @@ shinyServer(function(input, output) {
     query(
       connection,
       #propsfile = "www/.data.world",
-      dataset="kvaughn/s-17-dv-project-6", type="sql",
+      dataset="kvaughn/fnialproject", type="sql",
       query="select cast(year(`Inspection Date`) as string) as `Inspection Year`,
       `Zip Code`, count(`Process Description`) as numInspections, min(Score) as min_score,
 
@@ -175,7 +175,7 @@ shinyServer(function(input, output) {
     query(
       connection,
       #propsfile = "www/.data.world",
-      dataset="kvaughn/s-17-dv-project-6", type="sql",
+      dataset="kvaughn/finalproject", type="sql",
       query="SELECT zip.ZCTA5 as zipcode, 
       year(`Inspection Date`) as `Inspection Year`, zip.ZPOP as population, 
       count(distinct ris.`Facility ID`) as num_restaurants,
@@ -218,7 +218,7 @@ shinyServer(function(input, output) {
       tdf = query(
         connection,
         #propsfile = "www/.data.world",
-        dataset="kvaughn/s-17-dv-project-6", type="sql",
+        dataset="kvaughn/finalproject", type="sql",
         query="select year(`Inspection Date`) as `Inspection Year`,  
             `Zip Code`, Score, sum(Score) / count(Score) as average_score
                 from Restaurant_Inspection_Scores
@@ -264,7 +264,7 @@ shinyServer(function(input, output) {
     tempdf = query(
       connection,
       #propsfile = "www/.data.world",
-      dataset="kvaughn/s-17-dv-project-6", type="sql",
+      dataset="kvaughn/finalproject", type="sql",
       query="select ris.`Zip Code`, 
         (sum(ris.`Score`) / count(ris.`Process Description`)) as average_score,
         (srp.stops/srp.restaurants) as stops_per_rest,
@@ -313,7 +313,7 @@ shinyServer(function(input, output) {
     tempdf = query(
       connection,
       #propsfile = "www/.data.world",
-      dataset="kvaughn/s-17-dv-project-6", type="sql",
+      dataset="kvaughn/finalproject", type="sql",
       query="SELECT srp.`Zip Code`, fb.Native, fb.Naturalized, fb.Noncitizens, 
         (fb.Naturalized + fb.Noncitizens) as Nonnative, 
         (fb.Naturalized + fb.Noncitizens + fb.Native) as Population,
