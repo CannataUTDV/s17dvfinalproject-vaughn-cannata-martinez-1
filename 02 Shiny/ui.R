@@ -10,11 +10,7 @@ dashboardPage(
       menuItem("Home", tabName = "home", icon = icon("home")),
       menuItem("Boxplot example", tabName = "boxplot", icon = icon("archive")),
       menuItem("Histogram example", tabName = "hist", icon = icon("signal")),
-      menuItem("Scatterplot examples", tabName = "menu3", icon = icon("line-chart"),
-        menuSubItem("Scatterplot 1", tabName = "scatter1", icon = icon("check")),
-        menuSubItem("Scatterplot 2", tabName = "scatter2", icon = icon("check")),
-        menuSubItem("Scatterplot 3", tabName = "scatter3", icon = icon("check"))
-      ),
+      menuItem("Scatterplot examples", tabName = "scatter", icon = icon("line-chart")),
       menuItem("Crosstab examples", tabName = "menu1", icon = icon("th"),
         menuSubItem("Safety Index", tabName = "crosstab1", icon = icon("check")),
         menuSubItem("Lowest Inspection Scores", tabName = "crosstab2", icon = icon("check")),
@@ -63,8 +59,8 @@ dashboardPage(
               )
       ),
       # End Histogram tab content. ____________________________________________________________
-      # Begin Scatter1 tab content. ----------------------------------------------------------    
-      tabItem("Scatterplot 1", tabName = "scatter1",
+      # Begin Scatter tab content. ----------------------------------------------------------    
+      tabItem("Scatterplot Examples", tabName = "scatter",
               tabsetPanel(
                 tabPanel("Data",  
                          "Collect data for scatterplots by clicking button.",
@@ -73,37 +69,15 @@ dashboardPage(
                          hr(), # Add space after button.
                          DT::dataTableOutput("data9")
                 ),
-                tabPanel("Plot1",  
-                         plotOutput("plot9", height=400))
+                tabPanel("Population x Restaurants",  
+                         plotOutput("plot9", height=400)),
+                tabPanel("Population x Transit Stops", 
+                         plotOutput("plot10", height=400)),
+                tabPanel("Restaurants x Transit Stops", 
+                         plotOutput("plot11", height=400))
               )
       ),
-      # End Scatter1 tab content. ____________________________________________________________
-      # Begin Scatter2 tab content. ----------------------------------------------------------     
-      tabItem("Scatterplot 2", tabName = "scatter2",
-              tabsetPanel(
-                tabPanel("Data",  
-                         
-                         actionButton(inputId = "click10",  label = "To get data, click here"),
-                         hr(), # Add space after button.
-                         DT::dataTableOutput("data10")
-                ),
-                tabPanel("Plot", plotOutput("plot10", height=1000))
-              )
-      ),      
-      # End Scatter2 tab content. ____________________________________________________________
-      # Begin Scatter3 tab content. ----------------------------------------------------------     
-      tabItem("Scatterplot 3", tabName = "scatter3",
-              tabsetPanel(
-                tabPanel("Data",  
-                         
-                         actionButton(inputId = "click11",  label = "To get data, click here"),
-                         hr(), # Add space after button.
-                         DT::dataTableOutput("data11")
-                ),
-                tabPanel("Plot", plotOutput("plot11", height=1000))
-              )
-      ),        
-      # End Scatter3 tab content. ____________________________________________________________
+      # End Scatter tab content. ____________________________________________________________
       # Begin Crosstab1 tab content. ----------------------------------------------------------
       tabItem("Safety Index, scores by year: A low Safety Index indicates a relatively high number of low inspection scores per period", tabName = "crosstab1",
         tabsetPanel(
