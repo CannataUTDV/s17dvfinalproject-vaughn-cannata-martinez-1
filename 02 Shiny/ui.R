@@ -1,6 +1,9 @@
 #ui.R
 require(shiny)
 require(shinydashboard)
+require(DT)
+require(leaflet)
+require(plotly)
 
 dashboardPage(
   dashboardHeader(title = "Austin Restaurants"
@@ -55,7 +58,7 @@ dashboardPage(
                          hr(), # Add space after button.
                          DT::dataTableOutput("data8")
                 ),
-                tabPanel("Histogram", plotOutput("plot8", height=1000))
+                tabPanel("Histogram", plotlyOutput("plot8", height=1000))
               )
       ),
       # End Histogram tab content. ____________________________________________________________
@@ -70,11 +73,11 @@ dashboardPage(
                          DT::dataTableOutput("data9")
                 ),
                 tabPanel("Population x Restaurants",  
-                         plotOutput("plot9", height=400)),
+                         plotlyOutput("plot9", height=400)),
                 tabPanel("Population x Transit Stops", 
-                         plotOutput("plot10", height=400)),
+                         plotlyOutput("plot10", height=400)),
                 tabPanel("Restaurants x Transit Stops", 
-                         plotOutput("plot11", height=400))
+                         plotlyOutput("plot11", height=400))
               )
       ),
       # End Scatter tab content. ____________________________________________________________

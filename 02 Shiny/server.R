@@ -129,11 +129,13 @@ shinyServer(function(input, output) {
                                                   extensions = list(Responsive = TRUE, FixedHeader = TRUE)
    )
    })
-  output$plot8 <- renderPlot({ggplot(df8(), aes(Score)) +
+  output$plot8 <- renderPlotly({
+    p <- ggplot(df8(), aes(Score)) +
       scale_y_continuous(labels = scales::comma) + # no scientific notation
       theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) +
       theme(axis.text.y=element_text(size=12, hjust=0.5)) +
       geom_histogram(binwidth = 5, center = 2.5)
+    ggplotly(p)
   })
 # End Histogram Tab ____________________________________________________________
   
@@ -157,43 +159,49 @@ shinyServer(function(input, output) {
   )
   })
   
-    output$plot9 <- renderPlot({
+    output$plot9 <- renderPlotly({
       tdf1 <- as.data.frame(df9())
       correlation = cor(tdf1$population, tdf1$restaurants)
-      ggplot(tdf1, aes(x=population, y=restaurants)) +
-      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
-      theme(axis.text.y=element_text(size=14, hjust=0.5)) +
-      labs(x = "Population", y = "Number of Restaurants", 
+      p <- ggplot(tdf1) +
+        theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
+        theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+        labs(x = "Population", y = "Number of Restaurants", 
            title = "Population by number of restaurants", 
-           subtitle = paste("Correlation =", correlation)) +
-      geom_point(shape = 21, fill = "red") +
-      geom_quantile(quantiles = 0.5, size = 2, color = "red", alpha = 0.5)
+           caption = paste("Correlation =", correlation)) +
+        geom_point(aes(x=population, y=restaurants, color = zipcode), shape = 21, fill = "red") +
+        geom_quantile(aes(x=population, y=restaurants), 
+                      quantiles = 0.5, size = 2, color = "red", alpha = 0.5)
+      ggplotly(p)
     })
   
-    output$plot10 <- renderPlot({
+    output$plot10 <- renderPlotly({
       tdf2 <- as.data.frame(df9())
       correlation = cor(tdf2$population, tdf2$stops)
-      ggplot(tdf2, aes(x=population, y=stops)) +
-      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) +
-      theme(axis.text.y=element_text(size=14, hjust=0.5)) +
-      labs(x = "Population", y = "Number of Transit Stops",
+      q <- ggplot(tdf2) +
+        theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) +
+        theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+        labs(x = "Population", y = "Number of Transit Stops",
            title = "Population by number of transit stops", 
            subtitle = paste("Correlation =", correlation)) +
-      geom_point(shape = 21, fill = "blue") +
-      geom_quantile(quantiles = 0.5, size = 2, color = "blue", alpha = 0.5)
+        geom_point(aes(x=population, y=stops, color = zipcode), shape = 21, fill = "blue") +
+        geom_quantile(aes(x=population, y=stops), 
+                      quantiles = 0.5, size = 2, color = "blue", alpha = 0.5)
+      ggplotly(q)
     })
   
-    output$plot11 <- renderPlot({
+    output$plot11 <- renderPlotly({
       tdf3 <- as.data.frame(df9())
       correlation = cor(tdf3$restaurants, tdf3$stops)
-      ggplot(tdf3, aes(x=restaurants, y=stops)) +
+      r <- ggplot(tdf3) +
         theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) +
         theme(axis.text.y=element_text(size=14, hjust=0.5)) +
         labs(x = "Number of Restaurants", y = "Number of Transit Stops",
              title = "Number of restaurants by number of transit stops", 
              subtitle = paste("Correlation =", correlation)) +
-        geom_point(shape = 21, fill = "purple") +
-        geom_quantile(quantiles = 0.5, size = 2, color = "purple", alpha = 0.5)
+        geom_point(aes(x=restaurants, y=stops, color = zipcode), shape = 21, fill = "purple") +
+        geom_quantile(aes(x=restaurants, y=stops), 
+                      quantiles = 0.5, size = 2, color = "purple", alpha = 0.5)
+      ggplotly(r)
     })
   
 # End Scatterplot Tab 1 ____________________________________________________________  
