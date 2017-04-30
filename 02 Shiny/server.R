@@ -94,12 +94,14 @@ shinyServer(function(input, output) {
   
   output$plot7 <- renderPlot({
     tplot <- as.data.frame(df7()) %>% filter(zipcode == input$selectedZip)
+    #p <- 
     ggplot(tplot) +
       labs(title = "Restaurants with failing scores in selected zip code:") +
       theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=14, hjust=0.5)) +      
       geom_boxplot(aes(x=name, y=Score)) +
       coord_flip()
+    #ggplotly(p)
   })  
   
 # End Boxplot Tab ______________________________________________________________
@@ -163,14 +165,17 @@ shinyServer(function(input, output) {
       tdf1 <- as.data.frame(df9())
       correlation = cor(tdf1$population, tdf1$restaurants)
       p <- ggplot(tdf1) +
-        theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
-        theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+        theme_minimal() +
+        theme(plot.caption = element_text(size=12)) +
         labs(x = "Population", y = "Number of Restaurants", 
            title = "Population by number of restaurants", 
            caption = paste("Correlation =", correlation)) +
-        geom_point(aes(x=population, y=restaurants, color = zipcode), shape = 21, fill = "red") +
+        geom_point(aes(x=population, y=restaurants, color = zipcode), 
+                   show.legend = FALSE, shape = 21, fill = "red") +
+        scale_colour_gradient(low = "black", high = "black") +
         geom_quantile(aes(x=population, y=restaurants), 
-                      quantiles = 0.5, size = 2, color = "red", alpha = 0.5)
+                      quantiles = 0.5, size = 2, color = "red", alpha = 0.5) +
+        annotate("text", x = 50000, y = 50, label = paste("Correlation =", round(correlation, 3)))
       ggplotly(p)
     })
   
@@ -178,14 +183,16 @@ shinyServer(function(input, output) {
       tdf2 <- as.data.frame(df9())
       correlation = cor(tdf2$population, tdf2$stops)
       q <- ggplot(tdf2) +
-        theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) +
-        theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+        theme_minimal() +
         labs(x = "Population", y = "Number of Transit Stops",
            title = "Population by number of transit stops", 
            subtitle = paste("Correlation =", correlation)) +
-        geom_point(aes(x=population, y=stops, color = zipcode), shape = 21, fill = "blue") +
+        geom_point(aes(x=population, y=stops, color = zipcode), 
+                   show.legend = FALSE, shape = 21, fill = "blue") +
+        scale_colour_gradient(low = "black", high = "black") +
         geom_quantile(aes(x=population, y=stops), 
-                      quantiles = 0.5, size = 2, color = "blue", alpha = 0.5)
+                      quantiles = 0.5, size = 2, color = "blue", alpha = 0.5) +
+        annotate("text", x = 50000, y = 25, label = paste("Correlation =", round(correlation, 3)))
       ggplotly(q)
     })
   
@@ -193,14 +200,15 @@ shinyServer(function(input, output) {
       tdf3 <- as.data.frame(df9())
       correlation = cor(tdf3$restaurants, tdf3$stops)
       r <- ggplot(tdf3) +
-        theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) +
-        theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+        theme_minimal() +
         labs(x = "Number of Restaurants", y = "Number of Transit Stops",
-             title = "Number of restaurants by number of transit stops", 
-             subtitle = paste("Correlation =", correlation)) +
-        geom_point(aes(x=restaurants, y=stops, color = zipcode), shape = 21, fill = "purple") +
+             title = "Number of restaurants by number of transit stops") +
+        geom_point(aes(x=restaurants, y=stops, color = zipcode), 
+                   show.legend = FALSE, shape = 21, fill = "purple") +
+        scale_colour_gradient(low = "black", high = "black") +
         geom_quantile(aes(x=restaurants, y=stops), 
-                      quantiles = 0.5, size = 2, color = "purple", alpha = 0.5)
+                      quantiles = 0.5, size = 2, color = "purple", alpha = 0.5) +
+        annotate("text", x = 300, y = 20, label = paste("Correlation =", round(correlation, 3)))
       ggplotly(r)
     })
   
