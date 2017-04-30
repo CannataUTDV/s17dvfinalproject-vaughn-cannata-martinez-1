@@ -93,7 +93,7 @@ dashboardPage(
               hr(), # Add space after button.
               DT::dataTableOutput("data1")
             ),
-            tabPanel("Crosstab", plotOutput("plot1", height=1500))
+            tabPanel("Crosstab", plotlyOutput("plot1", height=1500))
           )
         ),
       # End Crosstab1 tab content. ____________________________________________________________
@@ -107,7 +107,7 @@ dashboardPage(
                          hr(), # Add space after button.
                          DT::dataTableOutput("data3")
                 ),
-                tabPanel("Crosstab", plotOutput("plot3", height=1500))
+                tabPanel("Crosstab", plotlyOutput("plot3", height=1500))
               )
       ),
       # End Crosstab2 tab content. ____________________________________________________________
@@ -123,7 +123,7 @@ dashboardPage(
                          hr(), # Add space after button.
                          DT::dataTableOutput("data4")
                 ),
-                tabPanel("Crosstab", plotOutput("plot4", height=1500))
+                tabPanel("Crosstab", plotlyOutput("plot4", height=1500))
               )
       ),
       # End Crosstab3 tab content. ____________________________________________________________
@@ -137,7 +137,9 @@ dashboardPage(
                    hr(), # Add space after button.
                    DT::dataTableOutput("data2")
           ),
-          tabPanel("Barchart", "Black = Average Score per Year, Red = Grand Average Score, and  Blue = (Grand Average Score - Average Score per Year)", plotOutput("plot2", height=1500))
+          tabPanel("Barchart", "Black = Average Score per Year, Red = Grand Average Score, and 
+                   Blue = (Grand Average Score - Average Score per Year)", 
+                   plotlyOutput("plot2", height=1500))
         )
       ),
       # End Barchart1 tab content. ____________________________________________________________
@@ -151,7 +153,10 @@ dashboardPage(
                          hr(), # Add space after button.
                          DT::dataTableOutput("data5")
                 ),
-                tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants in Region, and Blue = Average Number of Restaurants in Selected Zip Codes", plotOutput("plot5", height=1500))
+                tabPanel("Barchart", 
+                         "Black = Number of Restaurants, Red = Average Number of Restaurants in Region,
+                         and Blue = Average Number of Restaurants in Selected Zip Codes", 
+                         plotlyOutput("plot5", height=1500))
               )
       ),
       # End Barchart2 tab content. ____________________________________________________________
@@ -165,7 +170,9 @@ dashboardPage(
                          hr(), # Add space after button.
                          DT::dataTableOutput("data6")
                 ),
-                tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants in Region, and Blue = Average Number of Restaurants in Selected Zip Codes", plotOutput("plot6", height=1500))
+                tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants
+                         in Region, and Blue = Average Number of Restaurants in Selected Zip Codes",
+                         plotlyOutput("plot6", height=1500))
               )
       )
       # End Barchart3 tab content. ____________________________________________________________

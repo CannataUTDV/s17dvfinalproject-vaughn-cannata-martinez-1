@@ -245,11 +245,14 @@ shinyServer(function(input, output) {
   )
   })
   
-  output$plot1 <- renderPlot({ggplot(df1()) +
-    theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
-    theme(axis.text.y=element_text(size=14, hjust=0.5)) +
-    geom_text(aes(x=`Inspection Year`, y=as.character(`Zip Code`), label=round(average_score, 2)), size=4) +
-    geom_tile(aes(x=`Inspection Year`, y=as.character(`Zip Code`), fill=kpi), alpha=0.50)
+  output$plot1 <- renderPlotly({
+    p <- ggplot(df1()) +
+      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
+      theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+      geom_text(aes(x=`Inspection Year`, y=as.character(`Zip Code`), 
+                    label=round(average_score, 2)), size=4) +
+      geom_tile(aes(x=`Inspection Year`, y=as.character(`Zip Code`), fill=kpi), alpha=0.50)
+    ggplotly(p)
   })
 # End Crosstab Tab 1 ___________________________________________________________
   
@@ -279,11 +282,13 @@ shinyServer(function(input, output) {
   )
   })
   
-  output$plot3 <- renderPlot({ggplot(df3()) +
+  output$plot3 <- renderPlotly({
+    p <- ggplot(df3()) +
       theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=14, hjust=0.5)) +
       geom_text(aes(x=`Inspection Year`, y=as.character(`Zip Code`), label=min_score), size=4) +
       geom_tile(aes(x=`Inspection Year`, y=as.character(`Zip Code`), fill=rating), alpha=0.50)
+    ggplotly(p)
   })
   # End Crosstab Tab 2 ___________________________________________________________
 
@@ -319,11 +324,14 @@ shinyServer(function(input, output) {
   )
   })
   
-  output$plot4 <- renderPlot({ggplot(df4()) +
+  output$plot4 <- renderPlotly({
+    p <- ggplot(df4()) +
       theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=14, hjust=0.5)) +
-      geom_text(aes(x=`Inspection Year`, y=as.character(`zipcode`), label=round(density_display, 2)), size=4) +
+      geom_text(aes(x=`Inspection Year`, y=as.character(`zipcode`), 
+                    label=round(density_display, 2)), size=4) +
       geom_tile(aes(x=`Inspection Year`, y=as.character(`zipcode`), fill=density), alpha=0.50)
+    ggplotly(p)
   })
 # End Crosstab Tab 3 ___________________________________________________________
   
@@ -358,7 +366,8 @@ shinyServer(function(input, output) {
                         extensions = list(Responsive = TRUE, FixedHeader = TRUE)
   )
   })
-  output$plot2 <- renderPlot({ggplot(df2(), aes(x=`Inspection Year`, y=average_score)) +
+  output$plot2 <- renderPlotly({
+    p <- ggplot(df2(), aes(x=`Inspection Year`, y=average_score)) +
       scale_y_continuous(labels = scales::comma) + # no scientific notation
       theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=12, hjust=0.5)) +
@@ -367,11 +376,16 @@ shinyServer(function(input, output) {
       facet_wrap(~`Zip Code`, ncol = 1) + 
        
       # Add avg_score, and (avg_score - window_avg_score) label.
-      geom_text(mapping=aes(x=`Inspection Year`, y=average_score, label=round(average_score, 2)),colour="black") +
-      geom_text(mapping=aes(x=`Inspection Year`, y=average_score, label=round(average_score - window_avg_score, 2)),colour="blue", hjust=-.75) +
+      geom_text(mapping=aes(x=`Inspection Year`, y=average_score, 
+                            label=round(average_score, 2)),colour="black") +
+      geom_text(mapping=aes(x=`Inspection Year`, y=average_score, 
+                            label=round(average_score - window_avg_score, 2)),
+                colour="blue", hjust=-.75) +
       # Add reference line with a label.
       geom_hline(aes(yintercept = window_avg_score), color="red") +
-      geom_text(aes( -1, window_avg_score, label = round(window_avg_score, 2), vjust = -.5, hjust = -.25), color="red")
+      geom_text(aes( -1, window_avg_score, label = round(window_avg_score, 2), 
+                     vjust = -.5, hjust = -.25), color="red")
+    ggplotly(p)
   })
 # End Barchart Tab 1 ___________________________________________________________
   
@@ -410,19 +424,23 @@ shinyServer(function(input, output) {
   })
   
   
-  output$plot5 <- renderPlot({ggplot(df5(), aes(x=as.character(`Zip Code`), y=restaurants)) +
+  output$plot5 <- renderPlotly({
+    p <- ggplot(df5(), aes(x=as.character(`Zip Code`), y=restaurants)) +
       scale_y_continuous(labels = scales::comma) + # no scientific notation
       theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) +
       theme(axis.text.y=element_text(size=12, hjust=0.5)) +
       geom_col(position = "dodge") +
       coord_flip() +
       # Add number of restaurants label.
-      geom_text(mapping=aes(x=as.character(`Zip Code`), y=restaurants, label=restaurants, hjust=1.25), colour="black") +
+      geom_text(mapping=aes(x=as.character(`Zip Code`), y=restaurants, 
+                            label=restaurants, hjust=1.25), colour="black") +
       # Add reference lines with labels.
       geom_hline(aes(yintercept = 110.21), color="red") +
       geom_text(aes( -1, 110.21, label = '110.21', vjust = -.5, hjust = -.25), color="red") +
       geom_hline(aes(yintercept = win_avg), color="blue") +
-      geom_text(aes( -1, win_avg, label = round(win_avg, 2), vjust = -.5, hjust = -.25), color="blue")
+      geom_text(aes( -1, win_avg, label = round(win_avg, 2), 
+                     vjust = -.5, hjust = -.25), color="blue")
+    ggplotly(p)
   })
 # End Barchart Tab 2 ___________________________________________________________  
   
@@ -459,19 +477,23 @@ shinyServer(function(input, output) {
   })
   
   
-  output$plot6 <- renderPlot({ggplot(df6(), aes(x=as.character(`Zip Code`), y=restaurants)) +
+  output$plot6 <- renderPlotly({
+    p <- ggplot(df6(), aes(x=as.character(`Zip Code`), y=restaurants)) +
       scale_y_continuous(labels = scales::comma) + # no scientific notation
       theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) +
       theme(axis.text.y=element_text(size=12, hjust=0.5)) +
       geom_col(position = "dodge") +
       coord_flip() +
       # Add number of restaurants label.
-      geom_text(mapping=aes(x=as.character(`Zip Code`), y=restaurants, label=restaurants, hjust=1.25),colour="black") +
+      geom_text(mapping=aes(x=as.character(`Zip Code`), y=restaurants, 
+                            label=restaurants, hjust=1.25),colour="black") +
       # Add reference lines with labels.
       geom_hline(aes(yintercept = 110.21), color="red") +
       geom_text(aes( -1, 110.21, label = '110.21', vjust = -.5, hjust = -.25), color="red") +
       geom_hline(aes(yintercept = win_avg), color="blue") +
-      geom_text(aes( -1, win_avg, label = round(win_avg, 2), vjust = -.5, hjust = -.25), color="blue")
+      geom_text(aes( -1, win_avg, label = round(win_avg, 2), vjust = -.5, 
+                     hjust = -.25), color="blue")
+    ggplotly(p)
   })
 # End Barchart Tab 3 ___________________________________________________________
   
