@@ -262,7 +262,7 @@ shinyServer(function(input, output) {
     query(
       connection,
       #propsfile = "www/.data.world",
-      dataset="kvaughn/fnialproject", type="sql",
+      dataset="kvaughn/finalproject", type="sql",
       query="select cast(year(`Inspection Date`) as string) as `Inspection Year`,
       `Zip Code`, count(`Process Description`) as numInspections, min(Score) as min_score,
 
