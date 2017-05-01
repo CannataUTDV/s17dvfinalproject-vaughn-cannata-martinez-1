@@ -340,7 +340,6 @@ shinyServer(function(input, output) {
     if(input$selectedRegions == 'All') region_list <- input$selectedRegions
     else region_list <- append(list("Skip" = "Skip"), input$selectedRegions)
     print("Getting from data.world")
-      print(input$selectedRegions)
       tdf = query(
         connection,
         #propsfile = "www/.data.world",
@@ -359,7 +358,6 @@ shinyServer(function(input, output) {
     # This creates a "window average" - an average across each individual pane.
     tdf2 = tdf %>% group_by(`Zip Code`) %>% 
       summarize(window_avg_score = mean(average_score))
-    print(tdf2)
     dplyr::inner_join(tdf, tdf2, by = "Zip Code")
   })
   output$data2 <- renderDataTable({DT::datatable(df2(), rownames = FALSE,
@@ -367,25 +365,36 @@ shinyServer(function(input, output) {
   )
   })
   output$plot2 <- renderPlotly({
-    p <- ggplot(df2(), aes(x=`Inspection Year`, y=average_score)) +
-      scale_y_continuous(labels = scales::comma) + # no scientific notation
-      theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) + 
-      theme(axis.text.y=element_text(size=12, hjust=0.5)) +
-      geom_col(position = "dodge") + 
-      coord_flip() +
-      facet_wrap(~`Zip Code`, ncol = 1) + 
-       
-      # Add avg_score, and (avg_score - window_avg_score) label.
-      geom_text(mapping=aes(x=`Inspection Year`, y=average_score, 
-                            label=round(average_score, 2)),colour="black") +
-      geom_text(mapping=aes(x=`Inspection Year`, y=average_score, 
-                            label=round(average_score - window_avg_score, 2)),
-                colour="blue", hjust=-.75) +
-      # Add reference line with a label.
-      geom_hline(aes(yintercept = window_avg_score), color="red") +
-      geom_text(aes( -1, window_avg_score, label = round(window_avg_score, 2), 
-                     vjust = -.5, hjust = -.25), color="red")
-    ggplotly(p)
+    #p <- ggplot(df2(), aes(x=`Inspection Year`, y=average_score)) +
+    #  theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) + 
+    #  theme(axis.text.y=element_text(size=12, hjust=0.5)) +
+    #  geom_col(position = "dodge") + 
+    #  coord_flip() +
+    #  facet_wrap(~`Zip Code`, ncol = 1) +
+    #ggplotly(p) #%>%
+    #   add_lines()
+    #    
+    #   # Add avg_score, and (avg_score - window_avg_score) label.
+    #   geom_text(mapping=aes(x=`Inspection Year`, y=average_score, 
+    #                         label=round(average_score, 2)),colour="black") +
+    #   geom_text(mapping=aes(x=`Inspection Year`, y=average_score, 
+    #                         label=round(average_score - window_avg_score, 2)),
+    #             colour="blue", hjust=-.75) +
+    #   # Add reference line with a label.
+    #   geom_hline(aes(yintercept = window_avg_score), color="red") 
+    #   geom_text(aes( -1, window_avg_score, label = round(window_avg_score, 2), 
+    #                  vjust = -.5, hjust = -.25), color="red")
+    # ggplotly(p)
+    plot_ly(
+      data = as.data.frame(df2()),
+      y = ~`Inspection Year`,
+      x = ~average_score,
+      color = ~`Zip Code`,
+      type = "bar"
+    ) %>%
+      #add_lines(x=~average_score) #%>%
+      subplot(shareX = TRUE)
+    
   })
 # End Barchart Tab 1 ___________________________________________________________
   
