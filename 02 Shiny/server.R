@@ -96,6 +96,7 @@ shinyServer(function(input, output) {
     tplot <- as.data.frame(df7()) %>% filter(zipcode == input$selectedZip)
     #p <- 
     ggplot(tplot) +
+      theme_minimal() +
       labs(title = "Restaurants with failing scores in selected zip code:") +
       theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=14, hjust=0.5)) +      
@@ -133,6 +134,7 @@ shinyServer(function(input, output) {
    })
   output$plot8 <- renderPlotly({
     p <- ggplot(df8(), aes(Score)) +
+      theme_minimal() +
       scale_y_continuous(labels = scales::comma) + # no scientific notation
       theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) +
       theme(axis.text.y=element_text(size=12, hjust=0.5)) +
@@ -247,8 +249,9 @@ shinyServer(function(input, output) {
   
   output$plot1 <- renderPlotly({
     p <- ggplot(df1()) +
-      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
-      theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+      theme_minimal() +
+      theme(axis.text.x=element_text(angle=90, size=10, vjust=0.5)) + 
+      theme(axis.text.y=element_text(size=10, hjust=0.5)) +
       geom_text(aes(x=`Inspection Year`, y=as.character(`Zip Code`), 
                     label=round(average_score, 2)), size=4) +
       geom_tile(aes(x=`Inspection Year`, y=as.character(`Zip Code`), fill=kpi), alpha=0.50)
@@ -284,8 +287,9 @@ shinyServer(function(input, output) {
   
   output$plot3 <- renderPlotly({
     p <- ggplot(df3()) +
-      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
-      theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+      theme_minimal() +
+      theme(axis.text.x=element_text(angle=90, size=10, vjust=0.5)) + 
+      theme(axis.text.y=element_text(size=10, hjust=0.5)) +
       geom_text(aes(x=`Inspection Year`, y=as.character(`Zip Code`), label=min_score), size=4) +
       geom_tile(aes(x=`Inspection Year`, y=as.character(`Zip Code`), fill=rating), alpha=0.50)
     ggplotly(p)
@@ -326,8 +330,9 @@ shinyServer(function(input, output) {
   
   output$plot4 <- renderPlotly({
     p <- ggplot(df4()) +
-      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
-      theme(axis.text.y=element_text(size=14, hjust=0.5)) +
+      theme_minimal() +
+      theme(axis.text.x=element_text(angle=90, size=10, vjust=0.5)) + 
+      theme(axis.text.y=element_text(size=10, hjust=0.5)) +
       geom_text(aes(x=`Inspection Year`, y=as.character(`zipcode`), 
                     label=round(density_display, 2)), size=4) +
       geom_tile(aes(x=`Inspection Year`, y=as.character(`zipcode`), fill=density), alpha=0.50)
@@ -389,11 +394,10 @@ shinyServer(function(input, output) {
       data = as.data.frame(df2()),
       y = ~`Inspection Year`,
       x = ~average_score,
-      color = ~`Zip Code`,
+      color = ~as.character(`Zip Code`),
       type = "bar"
-    ) %>%
-      #add_lines(x=~average_score) #%>%
-      subplot(shareX = TRUE)
+    ) %>% group_by(`Zip Code`) %>%
+      subplot()
     
   })
 # End Barchart Tab 1 ___________________________________________________________
@@ -435,20 +439,21 @@ shinyServer(function(input, output) {
   
   output$plot5 <- renderPlotly({
     p <- ggplot(df5(), aes(x=as.character(`Zip Code`), y=restaurants)) +
-      scale_y_continuous(labels = scales::comma) + # no scientific notation
-      theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) +
-      theme(axis.text.y=element_text(size=12, hjust=0.5)) +
-      geom_col(position = "dodge") +
-      coord_flip() +
+      theme_minimal() +
+      #scale_y_continuous(labels = scales::comma) + # no scientific notation
+      theme(axis.text.x=element_text(angle=90, size=10, vjust=0.5)) +
+      theme(axis.text.y=element_text(size=10, hjust=0.5)) +
+      geom_col(aes(fill = stops), show.legend = FALSE, position = "dodge") +
+      scale_fill_gradient(low = "dark gray", high = "dark gray") +
       # Add number of restaurants label.
       geom_text(mapping=aes(x=as.character(`Zip Code`), y=restaurants, 
-                            label=restaurants, hjust=1.25), colour="black") +
+                            label=restaurants)) +
       # Add reference lines with labels.
       geom_hline(aes(yintercept = 110.21), color="red") +
-      geom_text(aes( -1, 110.21, label = '110.21', vjust = -.5, hjust = -.25), color="red") +
+      geom_text(aes( 2, 110.21, label = '110.21'), color="red") +
       geom_hline(aes(yintercept = win_avg), color="blue") +
-      geom_text(aes( -1, win_avg, label = round(win_avg, 2), 
-                     vjust = -.5, hjust = -.25), color="blue")
+      geom_text(aes( 2, win_avg, label = round(win_avg, 2)), color="blue") +
+      labs(x = "Zip Code", y = "Number of Restaurants")
     ggplotly(p)
   })
 # End Barchart Tab 2 ___________________________________________________________  
@@ -488,20 +493,22 @@ shinyServer(function(input, output) {
   
   output$plot6 <- renderPlotly({
     p <- ggplot(df6(), aes(x=as.character(`Zip Code`), y=restaurants)) +
+      theme_minimal() +
       scale_y_continuous(labels = scales::comma) + # no scientific notation
-      theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) +
-      theme(axis.text.y=element_text(size=12, hjust=0.5)) +
-      geom_col(position = "dodge") +
-      coord_flip() +
+      theme(axis.text.x=element_text(angle=90, size=10, vjust=0.5)) +
+      theme(axis.text.y=element_text(size=10, hjust=0.5)) +
+      geom_col(aes(fill = Percent), show.legend = FALSE, position = "dodge") +
+      scale_fill_gradient(low = "dark gray", high = "dark gray") +
       # Add number of restaurants label.
       geom_text(mapping=aes(x=as.character(`Zip Code`), y=restaurants, 
                             label=restaurants, hjust=1.25),colour="black") +
       # Add reference lines with labels.
       geom_hline(aes(yintercept = 110.21), color="red") +
-      geom_text(aes( -1, 110.21, label = '110.21', vjust = -.5, hjust = -.25), color="red") +
+      geom_text(aes( 2, 110.21, label = '110.21', vjust = -.5, hjust = -.25), color="red") +
       geom_hline(aes(yintercept = win_avg), color="blue") +
-      geom_text(aes( -1, win_avg, label = round(win_avg, 2), vjust = -.5, 
-                     hjust = -.25), color="blue")
+      geom_text(aes( 2, win_avg, label = round(win_avg, 2), vjust = -.5, 
+                     hjust = -.25), color="blue") +
+      labs(x = "Zip Code", y = "Number of Restaurants")
     ggplotly(p)
   })
 # End Barchart Tab 3 ___________________________________________________________

@@ -137,8 +137,7 @@ dashboardPage(
                    hr(), # Add space after button.
                    DT::dataTableOutput("data2")
           ),
-          tabPanel("Barchart", "Black = Average Score per Year, Red = Grand Average Score, and 
-                   Blue = (Grand Average Score - Average Score per Year)", 
+          tabPanel("Barchart", 
                    plotlyOutput("plot2", height=1500))
         )
       ),
@@ -156,7 +155,7 @@ dashboardPage(
                 tabPanel("Barchart", 
                          "Black = Number of Restaurants, Red = Average Number of Restaurants in Region,
                          and Blue = Average Number of Restaurants in Selected Zip Codes", 
-                         plotlyOutput("plot5", height=1500))
+                         plotlyOutput("plot5", height=1000))
               )
       ),
       # End Barchart2 tab content. ____________________________________________________________
@@ -172,7 +171,7 @@ dashboardPage(
                 ),
                 tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants
                          in Region, and Blue = Average Number of Restaurants in Selected Zip Codes",
-                         plotlyOutput("plot6", height=1500))
+                         plotlyOutput("plot6", height=1000))
               )
       )
       # End Barchart3 tab content. ____________________________________________________________
