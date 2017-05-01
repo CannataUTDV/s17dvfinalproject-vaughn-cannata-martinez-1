@@ -33,8 +33,8 @@ dashboardPage(
       # Begin Boxplot tab content. ----------------------------------------------------------
       tabItem("Austin-area restaurants with scores below cutoff value, 2014-2017", tabName = "boxplot",
               tabsetPanel(
-                tabPanel("Data", "Minimum score below:",
-                         sliderInput("ScoreCutoff", "Slider is preset on cutoff for reinspection", 
+                tabPanel("Data", "Slider is preset on cutoff for reinspection",
+                         sliderInput("ScoreCutoff", "Minimum score below:", 
                                      min = 36, max = 100,  value = 70),
                          actionButton(inputId = "click7", label = "Set cutoff"),
                          hr(), # Add space after button.
@@ -146,8 +146,8 @@ dashboardPage(
       # Begin Barchart2 tab content. ----------------------------------------------------------
       tabItem("Transit stops and restaurant density", tabName = "barchart2",
               tabsetPanel(
-                tabPanel("Data", "Minimum Stops per Zip Code:",
-                         sliderInput("Stops", "Slider is preset on average number of stops", 
+                tabPanel("Data", "Slider is preset on average number of stops",
+                         sliderInput("Stops", "Minimum Stops per Zip Code:", 
                                      min = 1.0, max = 237.0,  value = 61),
                          actionButton(inputId = "click5", label = "Set minimum"),
                          hr(), # Add space after button.
@@ -163,8 +163,8 @@ dashboardPage(
       # Begin Barchart3 tab content. ----------------------------------------------------------
       tabItem("Nonnative residents and restaurant density", tabName = "barchart3",
               tabsetPanel(
-                tabPanel("Data", "Percent nonnative population:",
-                         sliderInput("Nonnative", "Slider is preset on average percentage for region", 
+                tabPanel("Data", "Slider is preset on average percentage for region",
+                         sliderInput("Nonnative", "Percent nonnative population:", 
                                      min = 7, max = 36,  value = 17.4),
                          actionButton(inputId = "click6", label = "Set minimum"),
                          hr(), # Add space after button.

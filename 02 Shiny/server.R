@@ -97,10 +97,11 @@ shinyServer(function(input, output) {
     p <- ggplot(tplot) +
       theme_minimal() +
       labs(title = "Restaurants with failing scores in selected zip code:") +
-      theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
-      theme(axis.text.y=element_text(size=14, hjust=0.5)) +      
-      geom_boxplot(aes(x=name, y=Score)) 
-    #  coord_flip()
+      theme(axis.text.x=element_text(angle=90, size=10, vjust=0.5)) +
+      theme(axis.text.y=element_text(size=10, hjust=0.5)) +
+      geom_boxplot(aes(x=name, y=Score)) +
+      geom_hline(yintercept = minScore(), color = "red", alpha = 0.5) + 
+      geom_text(aes( .75, minScore(), label = round(minScore(), 2)), color="red")
     ggplotly(p)
     
   })  
