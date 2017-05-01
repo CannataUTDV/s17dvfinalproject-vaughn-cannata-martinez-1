@@ -141,8 +141,17 @@ write.csv(df, gsub("PreETL_", "", file_path), row.names=FALSE, na = "")
 #**Visualizations**
 
 ##**Interesting Things**
+1) Chinatown.  
+Generally speaking, low scores are outliers for restaurants.  The inspector caught them on a bad day, perhaps.  Look at the histogram for an indication of the proportion of passing scores (above 70) versus failing scores.  If you're interested in seeing the whole collection of scores for a restaurant with at least one low score, use the boxplot and select the zipcode of interest.  
+Some restaurants demonstrate a trend in their low scores that goes beyond "one bad day".  Chinatown, in 78731, is a good example of this.  A score of 70 or higher is considered 'passing,' while a score below 70 triggers an automatic reinspection of the facility.  Restaurants are encouraged to aim for scores approaching 100.  Chinatown is apparently just aiming to pass.  With an average score of 71, it's meeting its goal.  
 
+2) The limitations of our dataset.  
+We originally expected strong correlations between the number of restaurants in a given zip code and the population of that zip code, with an expectation that downtown would be an outlier (lots of restaurants, relatively few residents).  When we graphed our data, we found that restaurant quantity and population were only weakly correlated, and we found a number of unexpected outliers.  
+Similarly, we expected that the number of transit stops would be strongly correlated with the number of restaurants in a given zipcode.  This time, our data supported our expectations, with a moderately strong correlation of 0.756.  
+Curiosity then led us to plot population versus number of transit stops for a given zipcode; again, the two were only weakly correlated, with many of the same outliers.  This prompted a closer look at those outliers, and demonstrated a shortcoming in our dataset.  
+It turns out that the outliers with large populations and few transit stops or restaurants are in the far suburbs of Austin.  These areas are governed by other civic bodies, and thus the bulk of their restaurant inspections (and, potentially, transit) will be conducted by an entity other than the City of Austin.  In order to get a cleaner view of the relationship between population, transit, and restaurant density, we would need to adjust our data to only include areas under the jurisdiction of the City of Austin.  
 
+3)
 
 ##**Visualizations using Tableau**
 
