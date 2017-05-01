@@ -4,7 +4,7 @@ library(plyr) #I put these here becaues dplyr warned that I should.
 library(dplyr)
 
 # Set working directory
-setwd("~/s17dvproject6-vaughn-cannata-martinez/00 Docs")
+setwd("~/s17dvfinalproject-vaughn-cannata-martinez-1/00 Docs")
 
 # Set filepath
 file_path = "../../CSVs/PreETL_Restaurant_Inspection_Scores.csv"
