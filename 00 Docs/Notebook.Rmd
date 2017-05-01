@@ -5,8 +5,10 @@ date: "<center>May 2, 2017</center>"
 output:
   html_notebook:
     toc: yes
+    toc_depth: 4
   html_document:
     toc: yes
+    toc_depth: 4
 ---
 
 #**Introduction**
@@ -138,50 +140,64 @@ write.csv(df, gsub("PreETL_", "", file_path), row.names=FALSE, na = "")
 
 #**Visualizations**
 
-##**Crosstab-related Visualizations using Tableau**
+##**Interesting Things**
+
+
+
+##**Visualizations using Tableau**
+
+###**Boxplot using Tableau**
+
+###**Histogram using Tableau**
+
+###**Scatterplot using Tableau**
+
+###**Crosstab-related Visualizations using Tableau**
 Below you will find the visualizations we created using Tableau. Each visualization is only a fraction of the information that can be viewed in Tableau, as these crosstabs cannot showcase all the information available at once.  Our Tableau workbook is included in our repository in the folder 01 Data.
 
-###*Inspection Scores, Area, and Income*
+####*Inspection Scores, Area, and Income*
 This crosstab shows by year and zipcode (in Austin), the average restaurant inspection score. The crosstab is colored by the percentage of households in each area under the national poverty line (pulled from US Census data). As is evident, average scores remain relatively high across poverty levels and zipcodes. In Tableau you are able to cycle through zipcodes in the western or eastern half of the greater Austin area. Even at this level, average scores remain similar. There are more average scores below 90 in the eastern section, but this is likely not significant.
 
 <center>![Tableau: Scores by Income and Area](../03 Visualizations/CrosstabAverageScorebyPovertyLevel.png)</center>
 
 It is possible this is unique to Austin, and may be a consequence of stringent food safety code in these areas. Further analysis would need to be done to see if these correlations are true elsewhere in the United States.
 
-###*Average Inspection Scores Geographically*
+####*Average Inspection Scores Geographically*
 As can be seen, this visualization displays the average inspections score for each zipcode area. Each zipcode's color is determined by its average inspection score's proximity to the grand average for the year(s) selected in the filter.  This is done using a calculated field, and will be recalculated according the the data selected in the Year filter.  If arriving at this map by clicking on either of the crosstabs, the zip codes will display the difference from the grand average of the selected year.
 
 <center>![Tableau: Map of Average Inspection Scores](../03 Visualizations/CrosstabInspectionScoreMap.png)</center>
 
 It is again evident that average scores are relatively high across each area. 
 
-###*Average Score by Year*
+####*Average Score by Year*
 This highly comprehensive visualization shows us three main pieces of information: average score, minimum score, and safety index. As has been previously noted, average scores are relatively high in each zipcode. Minumum scores can be quite low (one of the lowest scores is 36), but these are few and far between.
 
 <center>![Tableau: Average Score by Year](../03 Visualizations/CrosstabScoresbyYear.png)</center>
 
 This crosstab is also colored by a Safety Index.  This KPI is based in a calculated field that accounts for the average score and minimum score for a given zip code in a given year, then parameterized into Low, Medium, and High rankings.  The break point for each of these groupings can be adjusted using the sliders to the right of the crosstab.  
 
-##**Barchart-related Visualizations using Tableau**
+###**Barchart-related Visualizations using Tableau**
 
 
-###*CapMetro Stops by Zipcode as they Relate to Restaurant Density*
+####*CapMetro Stops by Zipcode as they Relate to Restaurant Density*
 Here we see visualized the number of bus stops per zipcode, colored by the number of restaurants in that zipcode. This visualization also shows an average line for the average number of stops. As is evident, the zipcodes with the darkest bars (those with the highest restuarant density), almost always surpass the average line, but also generally greatly surpass it. This is interesting because it suggests that, in general, zipcodes with a higher than average number of bus stops also have a high restuarant density.
 
 <center>![Tableau: Stops by Zipcode](../03 Visualizations/TBar1A.png)</center>
+<br>
 <center>![Tableau: Stops by Zipcode, High Restaurant Density](../03 Visualizations/TBar1B.png)</center>
 
 In Tableau, this visualization also allows you to adjust which zipcodes are displayed based on a minimum amount of restaurants, and also based on whether the zipcodes are above or below this minimum.
 
-###*Foreign Population vs. Restaurant Density*
+####*Foreign Population vs. Restaurant Density*
 Here we find a visualization that showcases foreign population by zipcode, and is colored to reflect the restaurant density of each zipcode. In Tableau, you are also able to toggle back and forth between a higher than average, or an at/below average foreign population.
 
 <center>![Tableau: Restaurant Density, Low Foreign Population](../03 Visualizations/TBar2A.png)</center>
+<br>
 <center>![Tableau: Restaurant Density, High Foreign Population](../03 Visualizations/TBar2B.png)</center>
 
 From this barchart, it would seem that higher than average foreign populated zipcodes don't necessarily have a higher restaurant density. Overall, it appears that restaurant density is pretty even across levels of foreign-born population (i.e. there are relatively similar numbers of high restaurant density zipcodes in both categories). This is interesting because it suggests that restaurant density may be fairly independent of foreign- or native-born population status.
 
-###*Stop to Restuarant Ratios per Zipcode by Nativity*
+####*Stop to Restuarant Ratios per Zipcode by Nativity*
 This visualization shows the populations of Native, Naturalized, and Non-Cititzen inhabitants for each zipcode. Further, these barcharts are colored by the restaurant to stop ratio (darker purple indicates a higher ratio). The highest ratios are between 78721 and 78724. 
 
 <center>![Tableau: Stops to Restaurants by Nativity](../03 Visualizations/TBar3.png)</center>
@@ -194,49 +210,72 @@ The screenshots and descriptions below are based on our interactive visualizatio
 ###**Boxplot Visualization using Shiny in R**
 One low score does not indicate a systemic problem with a restaurant's cleanliness; before judging a restaurant with a low score, it behooves us to consider the other scores it has received.  This boxplot allows the user to do just that.  First select a cutoof point for scores, then choose a zipcode to see all restaurants that have scored below that level at least one.  Each restaurant's scores will display, giving the user an idea of whether the low score was a fluke or a sign of problems.
 
+<center>![Shiny: Scores by Restaurant Data](../03 Visualizations/SBoxA.png)</center> 
+<br> 
+<center>![Shiny: Scores by Restaurant Boxplot](../03 Visualizations/SBoxB.png)</center>
+
 ###**Histogram Visualization using Shiny in R**
+This visualization allows the user to get a broader view of the restaurant inspection scores.  The user is given the option to select scores from any combination of years.  What's interesting here is that the vast majority of restaurant inspections result in "passing" grades of 70 or higher.
+
+<center>![Shiny: All Scores Data](../03 Visualizations/SHistA.png)</center> 
+<br>
+<center>![Shiny: All Scores Histogram](../03 Visualizations/SHistB.png)</center>
 
 ###**Scatterplot Visualization using Shiny in R**
+The Scatterplot tab includes three separate visualizations drawn from one set of data.  The first visualization plots the population of a zipcode against the number of restaurants in that zipcode.  The second graph plots the population per zipcode against the quantity of transit stops in that zipcode.  (Transit stop location information provided by Capital Metro and made available through data.texas.gov: https://data.texas.gov/dataset/GTFS/r4v4-vz24 )  As you see, the correlations between population and restaurant or transity-stop quantity are pretty weak.  The third visualization in this set graphs transit stops by restaurants, and shows a much stronger correlation.  See above for a discussion of one possible explanation for this pattern of relationships.
 
+<center>![Shiny: Scatterplot Data](../03 Visualizations/SScatterData.png)</center> 
+<br>
+<center>![Shiny: Restaurant by Population Scatterplot](../03 Visualizations/SScatter1.png)</center>
+<br>
+<center>![Shiny: Transit by Population Scatterplot](../03 Visualizations/SScatter2.png)</center> 
+<br>
+<center>![Shiny: Restaurant by Transit Scatterplot](../03 Visualizations/SScatter3.png)</center>
 
 ###**Crosstab Visualizations using Shiny in R**
 Click here to be taken to our published Shiny app: https://kvaughn.shinyapps.io/restaurant_inspection/
 
-###*Safety Index*
+####*Safety Index*
 This visualization starts with a somewhat-arbitrary KPI, the "Safety Index," that takes into account both the average score and the lowest inspection score received for a given zip code in a given year.  A high Safety Index indicates both a high average score and a high minimum score.  Set the parameters however you like (3 and 8 are reasonable defaults) and check the crosstab to see each zip code's ratings over the four-year period.
 
 <center>![Shiny: Safety Index Data](../03 Visualizations/SCross1A.png)</center> 
+<br>
 <center>![Shiny: Safety Index Crosstab](../03 Visualizations/SCross1B.png)</center>
 
-###*Lowest Inspection Scores*
+####*Lowest Inspection Scores*
 This visualization allows the user to set an arbitrary cutoff point as an aid for identifying low inspection scores.  The default value, 70, is the cutoff for restaurant inspections; lower scores will trigger a reinspection.  After selecting a parameter using the slider and requesting data, the user can select the "Crosstab" tab to see which zip codes and years had unacceptably low inspection scores.
 
-<center>![Shiny: Lowest Inspection Scores Data](../03 Visualizations/SCross2A.png)</center> 
+<center>![Shiny: Lowest Inspection Scores Data](../03 Visualizations/SCross2A.png)</center>
+<br>
 <center>![Shiny: Lowest Inspection Scores Crosstab](../03 Visualizations/SCross2B.png)</center>
 
-###*People per Restaurant*
+####*People per Restaurant*
 Austin is a fast-growing city, and our restaurant scene is currently booming as well.  This visualization allows a user to see where the density of restaurants compared to population is highest.  Using a public population dataset generated by the US Census, we can find the number of people per restaurant in a given zip code; as more restaurants are added (or fail), the people-per-restaurant number changes.  The default values highlight the density of restaurants in 78701, which is downtown Austin.
 
 <center>![Shiny: People per Restaurant Data](../03 Visualizations/SCross3A.png)</center> 
+<br>
 <center>![Shiny: People per Restaurant Crosstab](../03 Visualizations/SCross3B.png)</center>
 
-##**Barchart Visualizations using Shiny in R**
+###**Barchart Visualizations using Shiny in R**
 These visualizations are also accessible at https://kvaughn.shinyapps.io/restaurant_inspection/
 
-###*Scores by Zip Code*
+####*Scores by Zip Code*
 Barcharts can be a good way to quickly identify trends visually.  In this visualization, the user can create a set of zip codes of interest, then see each zipcode's average score per year over the three or four years contained in the dataset.
 
 <center>![Shiny: Scores by Zip Code Data](../03 Visualizations/SBar1A.png)</center> 
+<br>
 <center>![Shiny: Scores by Zip Code Bar Chart](../03 Visualizations/SBar1B.png)</center>
 
-###*Transit stops and restaurant density*
+####*Transit stops and restaurant density*
 Capital Metro, the Austin-area transit service, has made its data freely available for public download.  By importing this data into geographic information software (ArcGIS) and overlaying the coordinates of transit stops on a shapefile of regional zip codes, we were able to count the number of transit stops per zip code.  In this bar chart, we're examining the relationship between transit density and restaurant density.  Use the slider to select zip codes with more than the minimum number of transit stops, then compare the number of restaurants in these zip codes to the average number of restaurants per zip code throughout the region.  The blue line is the calculated average for all of the selected zip codes, and the red is the grand average for all of the zipcodes in the Greater Austin area.
 
 <center>![Shiny: Restaurant Density and Transit Stops Data](../03 Visualizations/SBar2A.png)</center> 
+<br>
 <center>![Shiny: Restaurant Density and Transit Stops Bar Chart](../03 Visualizations/SBar2B.png)</center>
 
-###*Nonnative residents and restaurant density*
+####*Nonnative residents and restaurant density*
 Would we expect zip codes with comparatively large numbers of nonnative (naturalized-citizen or noncitizen) residents to have more or fewer restaurants, on average, than zip codes with lower percentages of nonnative residents?  This barchart allows the user to select a minimum percentage of nonnative residents per zip code, then shows the number of restaurants in that zip code and the average number of restaurants per zip code for all of the qualifying zip codes.  This average can be compared to the grand average throughout the greater Austin area, shown in red.
 
 <center>![Shiny: Restaurant Density and Nonnative Residents Data](../03 Visualizations/SBar3A.png)</center> 
+<br>
 <center>![Shiny: Restaurant Density and Nonnative Residents Bar Chart](../03 Visualizations/SBar3B.png)</center>
