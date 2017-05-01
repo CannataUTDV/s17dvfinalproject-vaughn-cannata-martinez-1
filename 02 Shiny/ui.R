@@ -43,7 +43,7 @@ dashboardPage(
                          uiOutput("zip2"), # See http://shiny.rstudio.com/gallery/dynamic-ui.html
                          hr(), # Add space after button.
                          
-                         plotOutput("plot7", height=1000))
+                         plotlyOutput("plot7", height=700))
               )
       ),
       # End Boxplot tab content. ____________________________________________________________

@@ -92,17 +92,17 @@ shinyServer(function(input, output) {
   })
   
   
-  output$plot7 <- renderPlot({
+  output$plot7 <- renderPlotly({
     tplot <- as.data.frame(df7()) %>% filter(zipcode == input$selectedZip)
-    #p <- 
-    ggplot(tplot) +
+    p <- ggplot(tplot) +
       theme_minimal() +
       labs(title = "Restaurants with failing scores in selected zip code:") +
       theme(axis.text.x=element_text(angle=90, size=14, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=14, hjust=0.5)) +      
-      geom_boxplot(aes(x=name, y=Score)) +
-      coord_flip()
-    #ggplotly(p)
+      geom_boxplot(aes(x=name, y=Score)) 
+    #  coord_flip()
+    ggplotly(p)
+    
   })  
   
 # End Boxplot Tab ______________________________________________________________
