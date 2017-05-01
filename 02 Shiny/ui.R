@@ -59,7 +59,7 @@ dashboardPage(
                          hr(), # Add space after button.
                          DT::dataTableOutput("data8")
                 ),
-                tabPanel("Histogram", plotlyOutput("plot8", height=1000))
+                tabPanel("Histogram", plotlyOutput("plot8", height=700))
               )
       ),
       # End Histogram tab content. ____________________________________________________________
