@@ -29,6 +29,7 @@ dashboardPage(
   ),
   dashboardBody(
     tabItems(
+      tabItem("This set of visualizations is based on restaurant inspection scores gathered from the City of Austin between 2014 and early 2017.  Other data sources include transit stop location information from Capital Metro and population information from the 2010 United States Census.  The City of Austin Health Department would like to remind you that a restaurant inspection score is only a measure of a single moment in time, and that a single bad score doesn't necessarily indicate a health hazard.", tabName = "home"),
       # Begin Boxplot tab content. ----------------------------------------------------------
       tabItem("Austin-area restaurants with scores below cutoff value, 2014-2017", tabName = "boxplot",
               tabsetPanel(
