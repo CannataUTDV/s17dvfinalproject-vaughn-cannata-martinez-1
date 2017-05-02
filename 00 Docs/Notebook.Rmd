@@ -160,9 +160,14 @@ A good visualization of this distribution can be seen below.
 
 ###**Boxplot using Tableau**
 
-###**Histogram using Tableau**
+###**Raw Scores- Histogram**
+As can be seen in the visualization below, the most common raw restaurant inspection score is between 90 and 100. The 90-95 and 95-100 bins are essentially the same. The second most common ranges are 85-90 and 100-105. These are also the same size, but a little over half the size of the most common score range. 
 
-###**CapMetro Stops and Restaurant Density as they Relate to Population**
+<center>![Tableau: Raw Score Histogram](../03 Visualizations/THist.png)</center>
+
+The next largest bin is half the size of the second largest, and this pattern continues until we drop below 70. This is particularly good news, as it implies that failing scores (those below 70) are not very comming at all, and further more that exceptional scores are highly common.
+
+###**CapMetro Stops and Restaurant Density as they Relate to Population- Scatterplot**
 
 <center>![Tableau: Restaurant and Stop Density Scatterplot](../03 Visualizations/TBScatterplot.png)</center>
 
