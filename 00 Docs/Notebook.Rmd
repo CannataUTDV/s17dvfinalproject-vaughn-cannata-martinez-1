@@ -175,8 +175,11 @@ As can be seen in the visualization below, the most common raw restaurant inspec
 The next largest bin is half the size of the second largest, and this pattern continues until we drop below 70. This is particularly good news, as it implies that failing scores (those below 70) are not very common at all, and furthermore that exceptional scores are highly common.
 
 ###**CapMetro Stops and Restaurant Density as they Relate to Population- Scatterplot**
+Here we see a comprehensive visualization that reflects data as we've seen it before, in our "interesting things" section. This scatterplot shows restaurant and stop density per zipcode. Each point is sized by the population of that zipcode. Ultimately, we see an overall positive trend. However, upon closer examination, it is clear that many high population zipcodes have a lower restaurant and stop density. 
 
 <center>![Tableau: Restaurant and Stop Density Scatterplot](../03 Visualizations/TBScatterplot.png)</center>
+
+The implications of this have already been discussed in previous sections. However, it is also interesting to note that many zipcodes (regardless of population size), are grouped towards the lower to medium restaurant and stop density area. In fact, the further out in either direction you go, the less instances there are. This likely shows that while there is a slight positive correlation between stop and restaurant density, most areas are not likely to have an exceptional number of eihter. 
 
 ###**Crosstab-related Visualizations using Tableau**
 Below you will find the visualizations we created using Tableau. Each visualization is only a fraction of the information that can be viewed in Tableau, as these crosstabs cannot showcase all the information available at once.  Our Tableau workbook is included in our repository in the folder 01 Data.
