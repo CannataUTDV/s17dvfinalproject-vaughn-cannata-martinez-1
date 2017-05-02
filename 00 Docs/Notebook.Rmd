@@ -163,6 +163,9 @@ This prompted a closer look at those outliers, and demonstrated a shortcoming in
 A good visualization of this distribution can be seen below.
 <center>![Dataset Limitations Map](../03 Visualizations/TBOutlierMap.png)</center>
 <br>
+Compare this to the map of the boundaries of the City of Austin, courtesy of MapTechnica:
+<center>![CoA Boundaries](../03 Visualizations/COABoundaries.png)</center>
+<br>
 
 ###**Restaurant Density and Non-native Population**
 The United States Census provides information on the number of residents per zipcode that are native citizens, as well as how many residents are naturalized citizens or noncitizens.  For the purposes of this visualization, we've grouped "naturalized citizens" and "noncitizens" into one category, "non-native."  Would zipcodes with relatively high percentages of non-native residents be more or less restaurant-heavy than zipcodes with lower percentages of non-native residents?  It turns out that zip codes with high percentages (in the case of this visualization, 25% or more) non-native residents do in fact have significantly more restaurants on average than other zipcodes.
@@ -213,7 +216,6 @@ This highly comprehensive visualization shows us three main pieces of informatio
 This crosstab is also colored by a Safety Index.  This KPI is based in a calculated field that accounts for the average score and minimum score for a given zip code in a given year, then parameterized into Low, Medium, and High rankings.  The break point for each of these groupings can be adjusted using the sliders to the right of the crosstab.  
 
 ###**Barchart-related Visualizations using Tableau**
-
 
 ####*CapMetro Stops by Zipcode as they Relate to Restaurant Density*
 Here we see visualized the number of bus stops per zipcode, colored by the number of restaurants in that zipcode. This visualization also shows an average line for the average number of stops. As is evident, the zipcodes with the darkest bars (those with the highest restuarant density), almost always surpass the average line, but also generally greatly surpass it. This is interesting because it suggests that, in general, zipcodes with a higher than average number of bus stops also have a high restuarant density.
