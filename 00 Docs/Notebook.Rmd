@@ -148,6 +148,10 @@ Generally speaking, low scores are outliers for restaurants.  The inspector caug
 If you're interested in seeing the whole collection of scores for a restaurant with at least one low score, use our Shiny boxplot and select the zipcode of interest.  Some restaurants demonstrate a trend in their low scores that goes beyond "one bad day".  Chinatown, in 78731, is a good example of this.  A score of 70 or higher is considered 'passing,' while a score below 70 triggers an automatic reinspection of the facility.  Restaurants are encouraged to aim for scores approaching 100.  Chinatown is apparently just aiming to pass.  With an average score of 71, it's meeting its goal.
 <center>![Chinatown's Average Score](../03 Visualizations/SBoxB.png)</center>
 <br>
+To determine whether Chinatown's very low average score is unique, or whether it's a relatively common problem for restaurants with one or more low individual scores, we can look to the Tableau visualization.  Below is a boxplot showing all restaurants in the City of Austin with at least one score below 57.  Chinatown's closely-grouped low scores still stand out, but we can see that a few other restaurants have similarly low average scores.
+<center>![Boxplot for Scores Below 57](../03 Visualizations/TBoxplot.png)</center>
+<br>
+
 
 ###**The Limitations of our Dataset** 
 We originally expected strong correlations between the number of restaurants in a given zip code and the population of that zip code, with an expectation that downtown would be an outlier (lots of restaurants, relatively few residents).  When we graphed our data, we found that restaurant quantity and population were only weakly correlated, and we found a number of unexpected outliers.  
@@ -176,17 +180,17 @@ The United States Census provides information on the number of residents per zip
 ##**Visualizations using Tableau**
 
 ###**Boxplot using Tableau**
-
+This boxplot shows the restaurants with at least one score below a user-defined threshold, as filitered by zip code.  Users may select any or all zipcodes within the greater Austin area.  This visualization helps show the general trend towards higher scores, even with restaurants with one or more low scores.
 <center>![Tableau: Scores Below Cutoff Boxplot](../03 Visualizations/TBoxplot.png)</center>
 
-###**Raw Scores- Histogram**
-As can be seen in the visualization below, the most common raw restaurant inspection score is between 90 and 100. The 90-95 and 95-100 bins are essentially the same. The second most common ranges are 85-90 and 100-105. These are also the same size, but a little over half the size of the most common score range. 
+###**Histogram- Raw Scores**
+As can be seen in the visualization below, the most common raw restaurant inspection score is between 90 and 100. The 90-95 and 95-100 bins are essentially the same. The second most common ranges are 85-90 and 100-105.  All of the results in the 100-105 bin are in fact 100, indicating that "perfect" scores are very much achievable in the Austin restaurant inspection rubric.
 
 <center>![Tableau: Raw Score Histogram](../03 Visualizations/THist.png)</center>
 
 The next largest bin is half the size of the second largest, and this pattern continues until we drop below 70. This is particularly good news, as it implies that failing scores (those below 70) are not very common at all, and furthermore that exceptional scores are highly common.
 
-###**CapMetro Stops and Restaurant Density as they Relate to Population- Scatterplot**
+###**Scatterplot- CapMetro Stops and Restaurant Density as they Relate to Population**
 Here we see a comprehensive visualization that reflects data as we've seen it before, in our "interesting things" section. This scatterplot shows restaurant and stop density per zipcode. Each point is sized by the population of that zipcode. Ultimately, we see an overall positive trend. However, upon closer examination, it is clear that many high population zipcodes have a lower restaurant and stop density. 
 
 <center>![Tableau: Restaurant and Stop Density Scatterplot](../03 Visualizations/TBScatterplot.png)</center>
