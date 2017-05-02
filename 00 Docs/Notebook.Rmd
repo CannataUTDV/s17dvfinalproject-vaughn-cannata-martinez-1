@@ -149,7 +149,10 @@ Some restaurants demonstrate a trend in their low scores that goes beyond "one b
 We originally expected strong correlations between the number of restaurants in a given zip code and the population of that zip code, with an expectation that downtown would be an outlier (lots of restaurants, relatively few residents).  When we graphed our data, we found that restaurant quantity and population were only weakly correlated, and we found a number of unexpected outliers.  
 Similarly, we expected that the number of transit stops would be strongly correlated with the number of restaurants in a given zipcode.  This time, our data supported our expectations, with a moderately strong correlation of 0.756.  
 Curiosity then led us to plot population versus number of transit stops for a given zipcode; again, the two were only weakly correlated, with many of the same outliers.  This prompted a closer look at those outliers, and demonstrated a shortcoming in our dataset.  
-It turns out that the outliers with large populations and few transit stops or restaurants are in the far suburbs of Austin.  These areas are governed by other civic bodies, and thus the bulk of their restaurant inspections (and, potentially, transit) will be conducted by an entity other than the City of Austin.  In order to get a cleaner view of the relationship between population, transit, and restaurant density, we would need to adjust our data to only include areas under the jurisdiction of the City of Austin.  
+It turns out that the outliers with large populations and few transit stops or restaurants are in the far suburbs of Austin.  These areas are governed by other civic bodies, and thus the bulk of their restaurant inspections (and, potentially, transit) will be conducted by an entity other than the City of Austin.  In order to get a cleaner view of the relationship between population, transit, and restaurant density, we would need to adjust our data to only include areas under the jurisdiction of the City of Austin. 
+A good visualization of this distribution can be seen below.
+
+<center>![Dataset Limitations Map](../03 Visualizations/TBOutlierMap.png)</center>
 
 3)
 
@@ -159,7 +162,9 @@ It turns out that the outliers with large populations and few transit stops or r
 
 ###**Histogram using Tableau**
 
-###**Scatterplot using Tableau**
+###**CapMetro Stops and Restaurant Density as they Relate to Population**
+
+<center>![Tableau: Restaurant and Stop Density Scatterplot](../03 Visualizations/TBScatterplot.png)</center>
 
 ###**Crosstab-related Visualizations using Tableau**
 Below you will find the visualizations we created using Tableau. Each visualization is only a fraction of the information that can be viewed in Tableau, as these crosstabs cannot showcase all the information available at once.  Our Tableau workbook is included in our repository in the folder 01 Data.
