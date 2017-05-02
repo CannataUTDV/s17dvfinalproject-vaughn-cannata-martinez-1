@@ -167,6 +167,8 @@ A good visualization of this distribution can be seen below.
 
 ###**Boxplot using Tableau**
 
+<center>![Tableau: Scores Below Cutoff Boxplot](../03 Visualizations/TBoxplot.png)</center>
+
 ###**Raw Scores- Histogram**
 As can be seen in the visualization below, the most common raw restaurant inspection score is between 90 and 100. The 90-95 and 95-100 bins are essentially the same. The second most common ranges are 85-90 and 100-105. These are also the same size, but a little over half the size of the most common score range. 
 
