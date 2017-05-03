@@ -1,12 +1,12 @@
 ---
-title: "Austin Restarant Inspections"
+title: "<center>Austin Restaurant Inspections</center>"
 author: "<center><b>Marcus Martinez and Kate Vaughn</b></center>"
 date: "<center>May 2, 2017</center>"
 output:
-  html_notebook:
+  html_document:
     toc: yes
     toc_depth: 4
-  html_document:
+  html_notebook:
     toc: yes
     toc_depth: 4
 ---
@@ -175,9 +175,14 @@ Compare this to the map of the boundaries of the City of Austin, courtesy of Map
 The United States Census provides information on the number of residents per zipcode that are native citizens, as well as how many residents are naturalized citizens or noncitizens.  For the purposes of this visualization, we've grouped "naturalized citizens" and "noncitizens" into one category, "non-native."  Would zipcodes with relatively high percentages of non-native residents be more or less restaurant-heavy than zipcodes with lower percentages of non-native residents?  It turns out that zip codes with high percentages (in the case of this visualization, 25% or more) non-native residents do in fact have significantly more restaurants on average than other zipcodes.
 <center>![Non-native Residents](../03 Visualizations/Nonnative.png)</center>
 <br>
-
+This visualization seems to indicate that there are zipcodes in Austin where naturalized citizens and non-native residents account for more than a quarter of the population.  These zip codes are highlighted here:
+<center>![Map of Non-native Residents](../03 Visualizations/PctNonnative.png)</center>
+<br>
+These percentages seem remarkably high, which made us wonder about the quality of our data.  We drew our citizenship information from the 2015 ACS dataset published by the United States Census and made available by data.world: https://data.world/uscensusbureau/acs-2015-5-e-foreignbirth/file/USA_ZCTA.csv .  We checked this information against other zipcode-based population information, this time from the 2010 census, available here: https://data.world/nrippner/fips-to-zip-code-crosswalk .  A quick check of the differences between these two population counts shows that they seem to be in accordance with one another, when taking the rapid growth of Austin's suburbs into account.  Below is a map showing the difference between the 2010 Census data and the 2015 ACS data.  (Red indicates growth over that five-year span.)
+<center>![Map of Population Difference](../03 Visualizations/PopDiff.png)</center>
 
 ##**Visualizations using Tableau**
+Our Tableau file is available at https://github.com/CannataUTDV/s17dvfinalproject-vaughn-cannata-martinez-1/01_Data/Final.twb
 
 ###**Boxplot using Tableau**
 This boxplot shows the restaurants with at least one score below a user-defined threshold, as filitered by zip code.  Users may select any or all zipcodes within the greater Austin area.  This visualization helps show the general trend towards higher scores, even with restaurants with one or more low scores.

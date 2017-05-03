@@ -172,7 +172,10 @@ dashboardPage(
                 ),
                 tabPanel("Barchart", "Black = Number of Restaurants, Red = Average Number of Restaurants
                          in Region, and Blue = Average Number of Restaurants in Selected Zip Codes",
-                         plotlyOutput("plot6", height=700))
+                         plotlyOutput("plot6", height=700)
+                         ),
+                tabPanel("Map", "Select a marker for zip code and population information", 
+                         leafletOutput("Map1"), height=900 )
               )
       )
       # End Barchart3 tab content. ____________________________________________________________

@@ -8,31 +8,50 @@ require(data.world)
 require(readr)
 require(DT)
 require(plotly)
+library(rgdal)
+library(rgeos)
+library(leaflet)
+library(maps)
 
+connection = data.world(token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9kLXVzZXItY2xpZW50Omt2YXVnaG4iLCJpc3MiOiJhZ2VudDprdmF1Z2huOjo2ZGQ3N2FjZS1kYjFkLTQ2ZTktODZmZi04MzIzYzQ2MTYyN2UiLCJpYXQiOjE0ODQ2OTcyNzUsInJvbGUiOlsidXNlcl9hcGlfd3JpdGUiLCJ1c2VyX2FwaV9yZWFkIl0sImdlbmVyYWwtcHVycG9zZSI6dHJ1ZX0.FGeVf26qEOhxgRU9idrxcL75Jp84MOak_L0bGoZ33Yi1VFM9_McW7-vEtv3_AbkRH1NPfzWDy2Vn8LHSWGcAZg")
 
-# Below is a data.world token to reduce connectivity issues.
-connection <- data.world(token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9kLXVzZXItY2xpZW50Omt2YXVnaG4iLCJpc3MiOiJhZ2VudDprdmF1Z2huOjo2ZGQ3N2FjZS1kYjFkLTQ2ZTktODZmZi04MzIzYzQ2MTYyN2UiLCJpYXQiOjE0ODQ2OTcyNzUsInJvbGUiOlsidXNlcl9hcGlfd3JpdGUiLCJ1c2VyX2FwaV9yZWFkIl0sImdlbmVyYWwtcHVycG9zZSI6dHJ1ZX0.FGeVf26qEOhxgRU9idrxcL75Jp84MOak_L0bGoZ33Yi1VFM9_McW7-vEtv3_AbkRH1NPfzWDy2Vn8LHSWGcAZg")
 
 # The following query is for the select list in the first Barcharts tab.
 regions = query(
-  connection,
-  #data.world(propsfile = "www/.data.world"),  
+  #connection,
+  data.world(propsfile = "www/.data.world"),  
   dataset="kvaughn/finalproject", type="sql",  
   query="select distinct `Zip Code` as D, `Zip Code` as R 
   from Restaurant_Inspection_Scores order by 1"
-) # %>% View()
+) 
 region_list <- as.list(regions$D, regions$R)
 region_list <- append(list("All" = "All"), region_list)
 
+# This is for the Boxplot.
 zipcodes = query(
-  connection,
-  #data.world(propsfile = "www/.data.world"),
+  #connection,
+  data.world(propsfile = "www/.data.world"),
   dataset="kvaughn/finalproject", type="sql",
   query="select distinct `Zip Code` as zipcode
   from Restaurant_Inspection_Scores order by 1"
 )
+
 zip_list <- as.list(zipcodes$zipcode)
 
+
+# This code was adapted from http://stackoverflow.com/questions/33176378/mapping-zip-code-vs-county-shapefile-in-r
+
+# dat<-readOGR("www/atx/",
+#                   layer = "atx", GDAL1_integer64_policy = TRUE) 
+# 
+# # ----- Transform to EPSG 4326 - WGS84 (required)
+# subdat<-spTransform(subdat, CRS("+init=epsg:4326"))
+# 
+# # ----- save the data slot
+# subdat_data<-subdat@data[,c("ZCTA5CE10", "ALAND10", "GEOID10")]
+# 
+# # ----- to write to geojson we need a SpatialPolygonsDataFrame
+# subdat<-SpatialPolygonsDataFrame(subdat, data=subdat_data)
 
 # Begin shinyServer section ------------------------------------------------------------
 shinyServer(function(input, output) { 
@@ -67,8 +86,8 @@ shinyServer(function(input, output) {
   df7 <- eventReactive(input$click7, {
     print("Getting from data.world")
     allscores = query(
-      connection,
-      #propsfile = "www/.data.world",
+      #connection,
+      data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="select
       `Restaurant Name` as name, `Zip Code` as zipcode, `Facility ID`as ID, Score
@@ -114,8 +133,8 @@ shinyServer(function(input, output) {
     print("Getting from data.world")
     print(years_selected())
     tdf = query(
-      connection,
-      #propsfile = "www/.data.world",
+      #connection,
+      data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="select year(`Inspection Date`) as `Inspection Year`,  
       `Zip Code`, Score
@@ -124,10 +143,6 @@ shinyServer(function(input, output) {
       queryParameters = years_selected()
     )
     
-  #   tdf2 = tdf %>% group_by(`Zip Code`) %>% 
-  #     summarize(window_avg_score = mean(average_score))
-  #   print(tdf2)
-  #   dplyr::inner_join(tdf, tdf2, by = "Zip Code")
   })
    output$data8 <- renderDataTable({DT::datatable(df8(), rownames = FALSE,
                                                   extensions = list(Responsive = TRUE, FixedHeader = TRUE)
@@ -148,8 +163,8 @@ shinyServer(function(input, output) {
   df9 <- eventReactive(input$click9, {
     print("Getting from data.world")
     query(
-      connection,
-      # propsfile = "www/.data.world",
+      #connection,
+      data.world(propsfile = "www/.data.world"),
       dataset = "kvaughn/finalproject", type = "sql", 
       query = "select srp.`Zip Code` as zipcode, srp.stops, srp.restaurants, 
         srp.ZPOP as population, 100 * (fb.Noncitizens + fb.Naturalized) / fb.Native as percent_nonnative
@@ -221,8 +236,8 @@ shinyServer(function(input, output) {
   df1 <- eventReactive(input$click1, {
         print("Getting from data.world")
         query(
-            connection,
-            #propsfile = "www/.data.world",
+          #connection,
+          data.world(propsfile = "www/.data.world"),
             dataset="kvaughn/finalproject", type="sql",
             query="select
             cast(year(`Inspection Date`) as string) as `Inspection Year`,
@@ -264,8 +279,8 @@ shinyServer(function(input, output) {
   df3 <- eventReactive(input$click3, {
     print("Getting from data.world")
     query(
-      connection,
-      #propsfile = "www/.data.world",
+      #connection,
+      data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="select cast(year(`Inspection Date`) as string) as `Inspection Year`,
       `Zip Code`, count(`Process Description`) as numInspections, min(Score) as min_score,
@@ -301,8 +316,8 @@ shinyServer(function(input, output) {
   df4 <- eventReactive(input$click4, {
     print("Getting from data.world")
     query(
-      connection,
-      #propsfile = "www/.data.world",
+      #connection,
+      data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="SELECT zip.ZCTA5 as zipcode, 
       year(`Inspection Date`) as `Inspection Year`, zip.ZPOP as population, 
@@ -347,8 +362,8 @@ shinyServer(function(input, output) {
     else region_list <- append(list("Skip" = "Skip"), input$selectedRegions)
     print("Getting from data.world")
       tdf = query(
-        connection,
-        #propsfile = "www/.data.world",
+        #connection,
+        data.world(propsfile = "www/.data.world"),
         dataset="kvaughn/finalproject", type="sql",
         query="select year(`Inspection Date`) as `Inspection Year`,  
             `Zip Code`, Score, sum(Score) / count(Score) as average_score
@@ -371,26 +386,6 @@ shinyServer(function(input, output) {
   )
   })
   output$plot2 <- renderPlotly({
-    #p <- ggplot(df2(), aes(x=`Inspection Year`, y=average_score)) +
-    #  theme(axis.text.x=element_text(angle=0, size=12, vjust=0.5)) + 
-    #  theme(axis.text.y=element_text(size=12, hjust=0.5)) +
-    #  geom_col(position = "dodge") + 
-    #  coord_flip() +
-    #  facet_wrap(~`Zip Code`, ncol = 1) +
-    #ggplotly(p) #%>%
-    #   add_lines()
-    #    
-    #   # Add avg_score, and (avg_score - window_avg_score) label.
-    #   geom_text(mapping=aes(x=`Inspection Year`, y=average_score, 
-    #                         label=round(average_score, 2)),colour="black") +
-    #   geom_text(mapping=aes(x=`Inspection Year`, y=average_score, 
-    #                         label=round(average_score - window_avg_score, 2)),
-    #             colour="blue", hjust=-.75) +
-    #   # Add reference line with a label.
-    #   geom_hline(aes(yintercept = window_avg_score), color="red") 
-    #   geom_text(aes( -1, window_avg_score, label = round(window_avg_score, 2), 
-    #                  vjust = -.5, hjust = -.25), color="red")
-    # ggplotly(p)
     plot_ly(
       data = as.data.frame(df2()),
       y = ~`Inspection Year`,
@@ -408,8 +403,8 @@ shinyServer(function(input, output) {
     
     print("Getting from data.world")
     tempdf = query(
-      connection,
-      #propsfile = "www/.data.world",
+      #connection,
+      data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="select ris.`Zip Code`, 
         (sum(ris.`Score`) / count(ris.`Process Description`)) as average_score,
@@ -459,21 +454,23 @@ shinyServer(function(input, output) {
   })
 # End Barchart Tab 2 ___________________________________________________________  
   
-# Begin Barchart Tab 3 ------------------------------------------------------------------
+# Begin Barchart Tab 3 + Map ------------------------------------------------------------------
   df6 <- eventReactive(input$click6, {
     print("Getting from data.world")
     tempdf = query(
-      connection,
-      #propsfile = "www/.data.world",
+      #connection,
+      data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="SELECT srp.`Zip Code`, fb.Native, fb.Naturalized, fb.Noncitizens, 
         (fb.Naturalized + fb.Noncitizens) as Nonnative, 
         (fb.Naturalized + fb.Noncitizens + fb.Native) as Population,
         100*(fb.Naturalized + fb.Noncitizens) / (fb.Naturalized + fb.Noncitizens + fb.Native) as Percent,
-        srp.restaurants
+        srp.restaurants, zcc.LAT, zcc.LNG
         FROM `foreignbirth.csv/foreignbirth` fb
         JOIN `stops-restaurants-pop.csv/stops-restaurants-pop` srp
         ON fb.`Zip Code` = srp.`Zip Code`
+        JOIN `ZipCodeCoordinates.csv/ZipCodeCoordinates` zcc
+        ON srp.`Zip Code` = zcc.ZIP
         WHERE (100*(fb.Naturalized + fb.Noncitizens) / (fb.Naturalized + fb.Noncitizens + fb.Native)) > ?
         ORDER BY srp.`Zip Code`",
       queryParameters = minPercent()
@@ -512,8 +509,29 @@ shinyServer(function(input, output) {
       labs(x = "Zip Code", y = "Number of Restaurants")
     ggplotly(p)
   })
-# End Barchart Tab 3 ___________________________________________________________
   
+  
+  
+  output$Map1 <- renderLeaflet({
+    mdf <- as.data.frame(df6())
+    leaflet(width = 600, height = 900) %>%
+      addTiles() %>%
+      setView(-97.742589, 30.270569, zoom = 10) %>%
+#      addPolygons(data=subdat, color = "#444444", weight = 1, smoothFactor = 0.5,
+#      opacity = 1.0, fillOpacity = 0.1) %>%
+      addCircleMarkers(lng = mdf$LNG, lat = mdf$LAT, radius = mdf$Percent/2) %>%
+      addMarkers(lng = mdf$LNG,
+        lat = mdf$LAT,
+        options = markerOptions(riseOnHover = TRUE),
+        popup = as.character(paste(mdf$`Zip Code`, 
+          ", Percent Non-Native: ", round(mdf$Percent, 2),
+          ", Number of restaurants: ", mdf$restaurants,
+          ", Total Population: ", mdf$Population)) )
+  })
+
+# End Barchart Tab 3 + Map ___________________________________________________________
+  
+
  })
 
 # End shinyServer section _______________________________________________________________
