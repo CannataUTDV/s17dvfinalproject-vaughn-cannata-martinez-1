@@ -13,12 +13,10 @@ library(rgeos)
 library(leaflet)
 library(maps)
 
-connection = data.world(token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9kLXVzZXItY2xpZW50Omt2YXVnaG4iLCJpc3MiOiJhZ2VudDprdmF1Z2huOjo2ZGQ3N2FjZS1kYjFkLTQ2ZTktODZmZi04MzIzYzQ2MTYyN2UiLCJpYXQiOjE0ODQ2OTcyNzUsInJvbGUiOlsidXNlcl9hcGlfd3JpdGUiLCJ1c2VyX2FwaV9yZWFkIl0sImdlbmVyYWwtcHVycG9zZSI6dHJ1ZX0.FGeVf26qEOhxgRU9idrxcL75Jp84MOak_L0bGoZ33Yi1VFM9_McW7-vEtv3_AbkRH1NPfzWDy2Vn8LHSWGcAZg")
-
 
 # The following query is for the select list in the first Barcharts tab.
 regions = query(
-  #connection,
+  
   data.world(propsfile = "www/.data.world"),  
   dataset="kvaughn/finalproject", type="sql",  
   query="select distinct `Zip Code` as D, `Zip Code` as R 
@@ -29,7 +27,7 @@ region_list <- append(list("All" = "All"), region_list)
 
 # This is for the Boxplot.
 zipcodes = query(
-  #connection,
+  
   data.world(propsfile = "www/.data.world"),
   dataset="kvaughn/finalproject", type="sql",
   query="select distinct `Zip Code` as zipcode
@@ -39,7 +37,8 @@ zipcodes = query(
 zip_list <- as.list(zipcodes$zipcode)
 
 
-# This code was adapted from http://stackoverflow.com/questions/33176378/mapping-zip-code-vs-county-shapefile-in-r
+# This code was adapted from http://stackoverflow.com/questions/33176378/mapping-zip-code-vs-county-shapefile-in-r,
+# and can be used to create a set of polygons from a shapefile.
 
 # dat<-readOGR("www/atx/",
 #                   layer = "atx", GDAL1_integer64_policy = TRUE) 
@@ -86,11 +85,11 @@ shinyServer(function(input, output) {
   df7 <- eventReactive(input$click7, {
     print("Getting from data.world")
     allscores = query(
-      #connection,
+      
       data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="select
-      `Restaurant Name` as name, `Zip Code` as zipcode, `Facility ID`as ID, Score
+      `Restaurant Name` as name, `Zip Code` as zipcode, `Facility ID` as ID, Score
       from `Restaurant_Inspection_Scores.csv/Restaurant_Inspection_Scores`
       ORDER BY `Zip Code`, `Restaurant Name`"
     ) 
@@ -133,7 +132,7 @@ shinyServer(function(input, output) {
     print("Getting from data.world")
     print(years_selected())
     tdf = query(
-      #connection,
+      
       data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="select year(`Inspection Date`) as `Inspection Year`,  
@@ -163,7 +162,7 @@ shinyServer(function(input, output) {
   df9 <- eventReactive(input$click9, {
     print("Getting from data.world")
     query(
-      #connection,
+      
       data.world(propsfile = "www/.data.world"),
       dataset = "kvaughn/finalproject", type = "sql", 
       query = "select srp.`Zip Code` as zipcode, srp.stops, srp.restaurants, 
@@ -181,52 +180,61 @@ shinyServer(function(input, output) {
   
     output$plot9 <- renderPlotly({
       tdf1 <- as.data.frame(df9())
-      correlation = cor(tdf1$population, tdf1$restaurants)
+      corrtest = cor.test(tdf1$population, tdf1$restaurants)
+      pval = corrtest$p.value
+      corr = corrtest$estimate
       p <- ggplot(tdf1) +
         theme_minimal() +
         theme(plot.caption = element_text(size=12)) +
-        labs(x = "Population", y = "Number of Restaurants", 
+        labs(x = "Population per Zip Code", y = "Number of Restaurants per Zip Code", 
            title = "Population by number of restaurants", 
-           caption = paste("Correlation =", correlation)) +
+           caption = paste("Correlation =", corr)) +
         geom_point(aes(x=population, y=restaurants, color = zipcode), 
                    show.legend = FALSE, shape = 21, fill = "red") +
         scale_colour_gradient(low = "black", high = "black") +
         geom_quantile(aes(x=population, y=restaurants), 
                       quantiles = 0.5, size = 2, color = "red", alpha = 0.5) +
-        annotate("text", x = 50000, y = 50, label = paste("Correlation =", round(correlation, 3)))
+        annotate("text", x = 45000, y = 50, 
+                 label = paste("Correlation =", round(corr, 3), ", p-value:", round(pval, 3)))
       ggplotly(p)
     })
   
     output$plot10 <- renderPlotly({
       tdf2 <- as.data.frame(df9())
-      correlation = cor(tdf2$population, tdf2$stops)
+      corrtest = cor.test(tdf2$population, tdf2$stops)
+      pval = corrtest$p.value
+      corr = corrtest$estimate
       q <- ggplot(tdf2) +
         theme_minimal() +
-        labs(x = "Population", y = "Number of Transit Stops",
+        labs(x = "Population per Zip Code", y = "Number of Transit Stops per Zip Code",
            title = "Population by number of transit stops", 
-           subtitle = paste("Correlation =", correlation)) +
+           subtitle = paste("Correlation =", corr)) +
         geom_point(aes(x=population, y=stops, color = zipcode), 
                    show.legend = FALSE, shape = 21, fill = "blue") +
         scale_colour_gradient(low = "black", high = "black") +
         geom_quantile(aes(x=population, y=stops), 
                       quantiles = 0.5, size = 2, color = "blue", alpha = 0.5) +
-        annotate("text", x = 50000, y = 25, label = paste("Correlation =", round(correlation, 3)))
+        annotate("text", x = 50000, y = 25,
+                 label = paste("Correlation =", round(corr, 3), ", p-value:", round(pval, 3)))
       ggplotly(q)
     })
   
     output$plot11 <- renderPlotly({
       tdf3 <- as.data.frame(df9())
-      correlation = cor(tdf3$restaurants, tdf3$stops)
+      corrtest = cor.test(tdf3$restaurants, tdf3$stops)
+      pval = corrtest$p.value
+      corr = corrtest$estimate
       r <- ggplot(tdf3) +
         theme_minimal() +
-        labs(x = "Number of Restaurants", y = "Number of Transit Stops",
+        labs(x = "Number of Restaurants per Zip Code", y = "Number of Transit Stops per Zip Code",
              title = "Number of restaurants by number of transit stops") +
         geom_point(aes(x=restaurants, y=stops, color = zipcode), 
                    show.legend = FALSE, shape = 21, fill = "purple") +
         scale_colour_gradient(low = "black", high = "black") +
         geom_quantile(aes(x=restaurants, y=stops), 
                       quantiles = 0.5, size = 2, color = "purple", alpha = 0.5) +
-        annotate("text", x = 300, y = 20, label = paste("Correlation =", round(correlation, 3)))
+        annotate("text", x = 300, y = 20, 
+                 label = paste("Correlation =", round(corr, 3), ", p-value:", round(pval, 8)))
       ggplotly(r)
     })
   
@@ -236,7 +244,7 @@ shinyServer(function(input, output) {
   df1 <- eventReactive(input$click1, {
         print("Getting from data.world")
         query(
-          #connection,
+          
           data.world(propsfile = "www/.data.world"),
             dataset="kvaughn/finalproject", type="sql",
             query="select
@@ -244,13 +252,13 @@ shinyServer(function(input, output) {
             count(DISTINCT `Facility ID`), `Zip Code`, 
             min(Score) as min_score,
             sum(Score) / count(Score) as average_score,
-            (sum(Score) / count(Score)) / (100 - min(Score)) as `Safety Index`,
+            (sum(Score) / count(Score)) / (100 - min(Score)) as kpi,
 
             case
             when (sum(Score) / count(Score)) / (100 - min(Score)) < ? then '03 Low'
             when (sum(Score) / count(Score)) / (100 - min(Score)) < ? then '02 Medium'
             else '01 High'
-            end AS kpi
+            end AS `Safety Index`
             
             from `Restaurant_Inspection_Scores.csv/Restaurant_Inspection_Scores`
             group by `Zip Code`, year(`Inspection Date`)
@@ -266,11 +274,13 @@ shinyServer(function(input, output) {
   output$plot1 <- renderPlotly({
     p <- ggplot(df1()) +
       theme_minimal() +
+      labs(x = "Inspection Year", y = "Zip Code",
+           title = "Restaurant inspection scores by year, colored by Safety Index") +
       theme(axis.text.x=element_text(angle=90, size=10, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=10, hjust=0.5)) +
       geom_text(aes(x=`Inspection Year`, y=as.character(`Zip Code`), 
                     label=round(average_score, 2)), size=4) +
-      geom_tile(aes(x=`Inspection Year`, y=as.character(`Zip Code`), fill=kpi), alpha=0.50)
+      geom_tile(aes(x=`Inspection Year`, y=as.character(`Zip Code`), fill=`Safety Index`), alpha=0.50)
     ggplotly(p)
   })
 # End Crosstab Tab 1 ___________________________________________________________
@@ -279,16 +289,16 @@ shinyServer(function(input, output) {
   df3 <- eventReactive(input$click3, {
     print("Getting from data.world")
     query(
-      #connection,
+      
       data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="select cast(year(`Inspection Date`) as string) as `Inspection Year`,
-      `Zip Code`, count(`Process Description`) as numInspections, min(Score) as min_score,
+      `Zip Code`, count(`Process Description`) as numInspections, min(Score) as `Minimum Score`,
 
       case
       when min(Score) < ? then 'Below Cutoff'
       else 'Above Cutoff'
-      end as rating
+      end as Rating
 
       from `Restaurant_Inspection_Scores.csv/Restaurant_Inspection_Scores`
       group by `Zip Code`, year(`Inspection Date`)
@@ -304,10 +314,12 @@ shinyServer(function(input, output) {
   output$plot3 <- renderPlotly({
     p <- ggplot(df3()) +
       theme_minimal() +
+      labs(x = "Inspection Year", y = "Zip Code",
+           title = "Lowest inspection scores by year and zip code") +
       theme(axis.text.x=element_text(angle=90, size=10, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=10, hjust=0.5)) +
-      geom_text(aes(x=`Inspection Year`, y=as.character(`Zip Code`), label=min_score), size=4) +
-      geom_tile(aes(x=`Inspection Year`, y=as.character(`Zip Code`), fill=rating), alpha=0.50)
+      geom_text(aes(x=`Inspection Year`, y=as.character(`Zip Code`), label=`Minimum Score`), size=4) +
+      geom_tile(aes(x=`Inspection Year`, y=as.character(`Zip Code`), fill=Rating), alpha=0.50)
     ggplotly(p)
   })
   # End Crosstab Tab 2 ___________________________________________________________
@@ -316,7 +328,7 @@ shinyServer(function(input, output) {
   df4 <- eventReactive(input$click4, {
     print("Getting from data.world")
     query(
-      #connection,
+      
       data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="SELECT zip.ZCTA5 as zipcode, 
@@ -329,7 +341,7 @@ shinyServer(function(input, output) {
       when max(zip.ZPOP)/count(distinct ris.`Facility ID`) < ? then '01 High Density'
       when max(zip.ZPOP)/count(distinct ris.`Facility ID`) < ? then '02 Medium Density'
       else '03 Low Density'
-      end as density
+      end as Density
 
       FROM `nrippner`.`fips-to-zip-code-crosswalk`.`fips_zip_x` as zip
       LEFT JOIN `Restaurant_Inspection_Scores.csv/Restaurant_Inspection_Scores` as ris 
@@ -347,11 +359,13 @@ shinyServer(function(input, output) {
   output$plot4 <- renderPlotly({
     p <- ggplot(df4()) +
       theme_minimal() +
+      labs(x = "Inspection Year", y = "Zip Code",
+           title = "Number of people per restaurant in a given year") +
       theme(axis.text.x=element_text(angle=90, size=10, vjust=0.5)) + 
       theme(axis.text.y=element_text(size=10, hjust=0.5)) +
       geom_text(aes(x=`Inspection Year`, y=as.character(`zipcode`), 
                     label=round(density_display, 2)), size=4) +
-      geom_tile(aes(x=`Inspection Year`, y=as.character(`zipcode`), fill=density), alpha=0.50)
+      geom_tile(aes(x=`Inspection Year`, y=as.character(`zipcode`), fill=Density), alpha=0.50)
     ggplotly(p)
   })
 # End Crosstab Tab 3 ___________________________________________________________
@@ -362,7 +376,7 @@ shinyServer(function(input, output) {
     else region_list <- append(list("Skip" = "Skip"), input$selectedRegions)
     print("Getting from data.world")
       tdf = query(
-        #connection,
+        
         data.world(propsfile = "www/.data.world"),
         dataset="kvaughn/finalproject", type="sql",
         query="select year(`Inspection Date`) as `Inspection Year`,  
@@ -403,7 +417,7 @@ shinyServer(function(input, output) {
     
     print("Getting from data.world")
     tempdf = query(
-      #connection,
+      
       data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="select ris.`Zip Code`, 
@@ -458,7 +472,7 @@ shinyServer(function(input, output) {
   df6 <- eventReactive(input$click6, {
     print("Getting from data.world")
     tempdf = query(
-      #connection,
+      
       data.world(propsfile = "www/.data.world"),
       dataset="kvaughn/finalproject", type="sql",
       query="SELECT srp.`Zip Code`, fb.Native, fb.Naturalized, fb.Noncitizens, 
